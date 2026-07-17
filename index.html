@@ -327,7 +327,8 @@ var UI={
   arw_h_d:'20 個交易日（約一個月）', arw_h_h:'20 支一小時蠟燭（約 3 個交易日）',
   arw_p_d:'兩年', arw_p_h:'三個月',
   arw_searching:'🔍 搜尋緊…',
-  arw_upd:'⟳ 最後更新 {t}｜每分鐘自動更新（部分市場報價或延遲最多 15 分鐘）',
+  arw_upd:'⟳ 最後更新 {t}｜每 30 秒自動更新（美股接近即時；港股等市場受交易所規定延遲最多 15 分鐘）',
+  arw_px:'現價', arw_px_t:'（報價時間 {t}）',
   arw_legend:'圖例：🟡 EMA{f}（快線・動能）　🔵 EMA{s}（慢線・方向）　🟣 SMA{t}（趨勢分界線）　▲ 綠箭嘴＝買入　▼ 紅箭嘴＝賣出　<span id="arwUpd" style="opacity:.8"></span>',
   arw_status_h:'而家狀態（跟系統規則）', arw_stats_h:'過去{p}回測', arw_log_h:'信號解釋 — 點解嗰個位係 Buy／Sell',
   arw_long:'持有中', arw_entry:'買入價', arw_flat:'觀望中 — 未有買入信號，等三個條件齊晒先入場，唔好心急。',
@@ -408,7 +409,8 @@ var UI={
   arw_h_d:'20 trading days (~1 month)', arw_h_h:'20 hourly candles (~3 trading days)',
   arw_p_d:'two years', arw_p_h:'three months',
   arw_searching:'🔍 Searching…',
-  arw_upd:'⟳ Updated {t} | auto-refreshes every minute (some markets may be delayed up to 15 min)',
+  arw_upd:'⟳ Updated {t} | auto-refreshes every 30s (US near-realtime; HK and some markets delayed up to 15 min by exchange rules)',
+  arw_px:'Last price', arw_px_t:'(quote time {t})',
   arw_legend:'Legend: 🟡 EMA{f} (fast, momentum)　🔵 EMA{s} (slow, direction)　🟣 SMA{t} (trend line)　▲ green = buy　▼ red = sell　<span id="arwUpd" style="opacity:.8"></span>',
   arw_status_h:'Current Status (per system rules)', arw_stats_h:'Backtest (past {p})', arw_log_h:'Signal Explanations — why each Buy/Sell fired',
   arw_long:'Holding', arw_entry:'entry', arw_flat:'Standing aside — no buy signal yet; wait for all three conditions to align. No rush.',
@@ -1168,9 +1170,27 @@ function arwStamp(){
   var d=new Date(), p=function(x){ return (x<10?'0':'')+x; };
   el.textContent=t('arw_upd').replace('{t}',p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds()));
 }
-/* 將最新 bars 套入現有圖表（唔重建，保留縮放） */
-function arwApply(bars){
+/* 將最新 bars 套入現有圖表（唔重建，保留縮放）。meta.regularMarketPrice = Yahoo 最快嘅即市報價，
+   用嚟實時修正最後一支蠟燭 + 顯示「現價」列（連報價時間，等用戶知數據幾新鮮） */
+function arwApply(bars,meta){
   if(!_arwRefs) return;
+  var px=meta&&meta.regularMarketPrice;
+  if(px&&bars.length){
+    var lb=bars[bars.length-1];
+    lb.close=px; if(px>lb.high) lb.high=px; if(px<lb.low) lb.low=px;
+  }
+  var pd=document.getElementById('arwPx');
+  if(pd&&px){
+    var prev=bars.length>1?bars[bars.length-2].close:null, chg=prev?px/prev-1:null;
+    var col=chg==null?'var(--text)':(chg>=0?'#22c55e':'#ef4444');
+    var qt='';
+    if(meta.regularMarketTime){
+      var qd=new Date(meta.regularMarketTime*1000), p2=function(x){ return (x<10?'0':'')+x; };
+      qt=' <span style="color:var(--faint);font-size:12px">'+t('arw_px_t').replace('{t}',p2(qd.getHours())+':'+p2(qd.getMinutes()))+'</span>';
+    }
+    pd.innerHTML=t('arw_px')+'：<b style="color:'+col+';font-size:19px">'+px.toFixed(2)+'</b>'
+      +(chg==null?'':'　<b style="color:'+col+'">'+(chg>=0?'+':'')+(chg*100).toFixed(2)+'%</b>')+qt;
+  }
   var res=arwSignals(bars);
   function ld(d){ return bars.map(function(b,i){ return d[i]==null?null:{time:b.time,value:d[i]}; }).filter(Boolean); }
   _arwRefs.cs.setData(bars);
@@ -1183,17 +1203,17 @@ function arwApply(bars){
 function arwRefresh(){
   if(!document.getElementById('arwChart')||!_arwRefs){ clearInterval(_arwTimer); return; }
   var sym=ARW_SYM, mode=ARW_MODE;
-  arwFetch(sym,function(bars){
+  arwFetch(sym,function(bars,meta){
     if(ARW_SYM!==sym||ARW_MODE!==mode) return;
-    arwApply(bars);
-  },function(){ /* 靜靜哋失敗，一分鐘後再試 */ });
+    arwApply(bars,meta);
+  },function(){ /* 靜靜哋失敗，30 秒後再試 */ });
 }
 function mountArrow(){
   var el=document.getElementById('arwChart'); if(!el) return;
   clearInterval(_arwTimer); _arwRefs=null;
   el.innerHTML='<div style="padding:44px 20px;text-align:center;color:var(--faint)">'+t('arw_load')+'</div>';
   var sym=ARW_SYM, mode=ARW_MODE;
-  arwFetch(sym,function(bars){
+  arwFetch(sym,function(bars,meta){
     ensureLwc(function(){
       var box=document.getElementById('arwChart'); if(!box||ARW_SYM!==sym||ARW_MODE!==mode) return;
       box.innerHTML='';
@@ -1207,9 +1227,9 @@ function mountArrow(){
       function mk(color,w){ return ch.addLineSeries({color:color,lineWidth:w,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false}); }
       _arwRefs={cs:ch.addCandlestickSeries({upColor:'#22c55e',downColor:'#ef4444',wickUpColor:'#22c55e',wickDownColor:'#ef4444',borderVisible:false}),
         lf:mk('#eab308',1), ls:mk('#3b82f6',1), lt:mk('#a855f7',2)};
-      arwApply(bars);
+      arwApply(bars,meta);
       ch.timeScale().fitContent();
-      _arwTimer=setInterval(arwRefresh,60000); /* 每分鐘自動更新報價 */
+      _arwTimer=setInterval(arwRefresh,30000); /* 每 30 秒自動更新報價 */
     });
   },function(){
     var box=document.getElementById('arwChart'); if(!box||ARW_SYM!==sym) return;
@@ -1308,6 +1328,7 @@ function viewSystem(){
    +'<div class="filters" style="margin-bottom:0">'+chips
    +'<input id="arwNew" placeholder="'+t('arw_ph')+'" style="background:rgba(255,255,255,.05);border:1px solid rgba(140,160,200,.28);border-radius:9px;color:var(--text);padding:7px 11px;font-size:13px;width:215px">'
    +'<button class="fbtn" onclick="window.__arwAdd()">'+t('arw_add')+'</button></div>'
+   +'<div id="arwPx" style="margin:10px 2px 4px;font-size:14.5px;color:var(--text)"></div>'
    +'<div class="tvw" id="arwChart" style="height:430px"></div>'
    +'<p style="font-size:12.5px;color:var(--faint);margin-top:8px">'+arwT('arw_legend')+'</p>'
    +'<div class="grid g2" style="margin-top:12px;align-items:start">'
