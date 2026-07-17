@@ -1,0 +1,1455 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="InvestLens 智投透視 — 股票、ETF、商品深度分析：基本面、技術面、宏觀經濟、買賣信號、止蝕止賺與倉位管理。雙語（繁體中文／English）投資研究網站。">
+<title>InvestLens 智投透視 — 投資分析與交易策略</title>
+<style>
+:root{
+  --bg:#0a1120;
+  --bg2:#0d1628;
+  --panel:#121c30;
+  --panel2:#182541;
+  --line:#22304d;
+  --text:#e9eef7;
+  --muted:#94a1b8;
+  --faint:#5f6c85;
+  --gold:#e9b64d;
+  --gold2:#f6d489;
+  --green:#38d17e;
+  --teal:#3ec8b4;
+  --blue:#5aa2f0;
+  --amber:#f0b429;
+  --red:#f2716d;
+  --radius:14px;
+  --maxw:1080px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  background:
+    radial-gradient(1100px 500px at 85% -10%, rgba(233,182,77,.07), transparent 60%),
+    radial-gradient(900px 500px at -10% 10%, rgba(90,162,240,.08), transparent 55%),
+    var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue","PingFang TC","Microsoft JhengHei","Noto Sans TC",Arial,sans-serif;
+  line-height:1.65;
+  min-height:100vh;
+}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ---------- header ---------- */
+header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(10,17,32,.82);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.hwrap{max-width:var(--maxw);margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.logo{
+  width:34px;height:34px;border-radius:9px;flex:0 0 auto;
+  background:linear-gradient(135deg,var(--gold),#c98a2e);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;color:#1a1206;font-size:17px;
+  box-shadow:0 2px 10px rgba(233,182,77,.35);
+}
+.brand b{font-size:17px;letter-spacing:.3px}
+.brand small{display:block;color:var(--muted);font-size:11px;line-height:1.2;font-weight:400}
+nav{display:flex;gap:2px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-left:auto}
+nav::-webkit-scrollbar{display:none}
+nav a{
+  color:var(--muted);font-size:14px;padding:8px 12px;border-radius:9px;white-space:nowrap;
+}
+nav a:hover{color:var(--text);text-decoration:none;background:rgba(255,255,255,.05)}
+nav a.active{color:var(--gold);background:rgba(233,182,77,.1);font-weight:600}
+.langbtn{
+  flex:0 0 auto;border:1px solid var(--line);background:var(--panel);color:var(--text);
+  border-radius:9px;padding:7px 12px;font-size:13px;cursor:pointer;font-weight:600;
+}
+.langbtn:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ---------- layout ---------- */
+main{max-width:var(--maxw);margin:0 auto;padding:26px 18px 60px}
+.view{animation:fadein .25s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+h1{font-size:30px;line-height:1.3;letter-spacing:.3px}
+h2{font-size:21px;margin:34px 0 14px;display:flex;align-items:center;gap:9px}
+h2 .ic{font-size:19px}
+h3{font-size:16.5px}
+.sub{color:var(--muted);font-size:15px;margin-top:8px}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:840px){.g3,.g4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+/* ---------- hero ---------- */
+.hero{
+  border:1px solid var(--line);border-radius:18px;padding:34px 30px;
+  background:linear-gradient(160deg,var(--panel2),var(--panel) 70%);
+  position:relative;overflow:hidden;
+}
+.hero::after{
+  content:"";position:absolute;right:-70px;top:-70px;width:270px;height:270px;border-radius:50%;
+  background:radial-gradient(circle,rgba(233,182,77,.16),transparent 65%);
+}
+.hero .tag{
+  display:inline-block;font-size:12.5px;color:var(--gold);border:1px solid rgba(233,182,77,.4);
+  border-radius:99px;padding:3px 12px;margin-bottom:14px;background:rgba(233,182,77,.07);font-weight:600;
+}
+.cta{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.btn{
+  display:inline-block;border-radius:10px;padding:10px 18px;font-size:14.5px;font-weight:600;cursor:pointer;
+  border:1px solid var(--line);color:var(--text);background:var(--panel);
+}
+.btn:hover{text-decoration:none;border-color:var(--gold);color:var(--gold)}
+.btn.primary{background:linear-gradient(135deg,var(--gold),#d9982f);color:#1a1206;border:none}
+.btn.primary:hover{filter:brightness(1.08);color:#1a1206}
+
+/* ---------- cards / panels ---------- */
+.card{
+  border:1px solid var(--line);border-radius:var(--radius);padding:18px;
+  background:var(--panel);transition:transform .16s ease,border-color .16s ease;
+}
+.card.link{cursor:pointer}
+.card.link:hover{transform:translateY(-2px);border-color:var(--gold)}
+.card .ic{font-size:22px}
+.card h3{margin:8px 0 6px}
+.card p{color:var(--muted);font-size:13.5px}
+.panel{border:1px solid var(--line);border-radius:var(--radius);padding:20px;background:var(--panel)}
+.stat{border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;background:var(--panel)}
+.stat .k{color:var(--muted);font-size:12.5px}
+.stat .v{font-size:21px;font-weight:700;margin-top:2px}
+.stat .d{font-size:12px;color:var(--faint);margin-top:2px}
+
+/* ---------- badges / chips ---------- */
+.badge{display:inline-block;border-radius:99px;padding:3px 12px;font-size:12.5px;font-weight:700;letter-spacing:.3px}
+.sig-buy{background:rgba(56,209,126,.14);color:var(--green);border:1px solid rgba(56,209,126,.4)}
+.sig-acc{background:rgba(62,200,180,.13);color:var(--teal);border:1px solid rgba(62,200,180,.4)}
+.sig-hold{background:rgba(90,162,240,.13);color:var(--blue);border:1px solid rgba(90,162,240,.4)}
+.sig-watch{background:rgba(240,180,41,.13);color:var(--amber);border:1px solid rgba(240,180,41,.4)}
+.sig-avoid{background:rgba(242,113,109,.13);color:var(--red);border:1px solid rgba(242,113,109,.4)}
+.chip{
+  display:inline-block;border:1px solid var(--line);border-radius:8px;background:var(--panel2);
+  color:var(--muted);font-size:12px;padding:2px 9px;margin:2px 3px 2px 0;
+}
+.chip.gold{color:var(--gold);border-color:rgba(233,182,77,.4)}
+.up{color:var(--green)}.dn{color:var(--red)}
+
+/* risk meter */
+.risk{display:inline-flex;gap:3px;align-items:center;vertical-align:middle}
+.risk i{width:9px;height:9px;border-radius:50%;background:var(--line);display:inline-block}
+.risk.r1 i:nth-child(-n+1),.risk.r2 i:nth-child(-n+2){background:var(--green)}
+.risk.r3 i:nth-child(-n+3){background:var(--amber)}
+.risk.r4 i:nth-child(-n+4),.risk.r5 i:nth-child(-n+5){background:var(--red)}
+
+/* ---------- tables ---------- */
+.twrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius)}
+table.data{width:100%;border-collapse:collapse;font-size:13.8px;min-width:520px}
+table.data th{
+  text-align:left;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.6px;
+  padding:11px 14px;border-bottom:1px solid var(--line);background:var(--panel2);white-space:nowrap;
+}
+table.data td{padding:11px 14px;border-bottom:1px solid rgba(34,48,77,.55);vertical-align:top}
+table.data tr:last-child td{border-bottom:none}
+table.data tr.rowlink{cursor:pointer}
+table.data tr.rowlink:hover td{background:rgba(255,255,255,.03)}
+
+/* inline content tables inside sections */
+.sec table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+.sec th{text-align:left;color:var(--gold);font-size:12.5px;padding:8px 10px;border-bottom:1px solid var(--line);background:rgba(233,182,77,.05);white-space:nowrap}
+.sec td{padding:8px 10px;border-bottom:1px solid rgba(34,48,77,.5);color:var(--text)}
+.sec tr:last-child td{border-bottom:none}
+
+/* ---------- report detail ---------- */
+.back{display:inline-block;color:var(--muted);font-size:13.5px;margin-bottom:14px;cursor:pointer}
+.back:hover{color:var(--gold);text-decoration:none}
+.rephead{border:1px solid var(--line);border-radius:18px;padding:24px;background:linear-gradient(160deg,var(--panel2),var(--panel) 75%)}
+.rephead .ticker{font-size:31px;font-weight:800;letter-spacing:.5px}
+.rephead .nm{color:var(--muted);font-size:15px;margin-top:2px}
+.rephead .price{font-size:26px;font-weight:700;margin-top:4px}
+.rephead .meta{display:flex;gap:22px;flex-wrap:wrap;margin-top:16px;font-size:13px;color:var(--muted)}
+.rephead .meta b{color:var(--text);display:block;font-size:14.5px;font-weight:600}
+.sec{border:1px solid var(--line);border-radius:var(--radius);padding:20px;background:var(--panel);margin-top:14px}
+.sec>h3{display:flex;align-items:center;gap:9px;margin-bottom:10px;color:var(--gold2)}
+.sec p{margin:8px 0;font-size:14.3px}
+.sec ul,.sec ol{margin:8px 0 8px 22px;font-size:14.3px}
+.sec li{margin:5px 0}
+.sec .hl{color:var(--gold)}
+.sec b{color:var(--text)}
+.sec .mini{font-size:12.5px;color:var(--faint)}
+.scen{display:grid;gap:12px;grid-template-columns:repeat(3,1fr);margin-top:10px}
+@media(max-width:760px){.scen{grid-template-columns:1fr}}
+.scen .sc{border:1px solid var(--line);border-left:4px solid var(--line);border-radius:10px;padding:14px;background:var(--panel2);font-size:13.6px}
+.sc.bull{border-left-color:var(--green)}
+.sc.base{border-left-color:var(--blue)}
+.sc.bear{border-left-color:var(--red)}
+.sc h4{font-size:14.5px;margin-bottom:7px}
+.sc ul{margin-left:18px}
+.plan{border:1px solid rgba(233,182,77,.35);background:rgba(233,182,77,.05)}
+.lv{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.lv span{border:1px solid var(--line);background:var(--panel2);border-radius:8px;padding:4px 11px;font-size:13px}
+.lv .sup{border-color:rgba(56,209,126,.45);color:var(--green)}
+.lv .res{border-color:rgba(242,113,109,.45);color:var(--red)}
+.tvbox{margin-top:14px;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--panel)}
+.tvbox iframe{width:100%;height:430px;border:0;display:block}
+.tvbox .cap{padding:8px 14px;font-size:12px;color:var(--faint);border-top:1px solid var(--line)}
+
+/* ---------- calculators ---------- */
+.calc label{display:block;font-size:12.8px;color:var(--muted);margin:10px 0 4px}
+.calc input,.calc select{
+  width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:9px;color:var(--text);
+  padding:10px 12px;font-size:15px;outline:none;
+}
+.calc input:focus,.calc select:focus{border-color:var(--gold)}
+.calc .row{display:grid;gap:12px;grid-template-columns:repeat(2,1fr)}
+@media(max-width:560px){.calc .row{grid-template-columns:1fr}}
+.res{border:1px solid var(--line);border-radius:12px;background:var(--bg2);padding:16px;margin-top:16px}
+.res .line{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dashed rgba(34,48,77,.7);font-size:14px}
+.res .line:last-child{border-bottom:none}
+.res .line span:first-child{color:var(--muted)}
+.res .line b{font-variant-numeric:tabular-nums}
+.res .big{font-size:19px;color:var(--gold)}
+.warn{color:var(--red);font-size:13px;margin-top:8px}
+
+/* ---------- misc ---------- */
+.disc{
+  border:1px solid rgba(240,180,41,.35);background:rgba(240,180,41,.06);
+  border-radius:var(--radius);padding:14px 18px;font-size:13px;color:var(--muted);margin-top:30px;
+}
+.disc b{color:var(--amber)}
+footer{border-top:1px solid var(--line);margin-top:20px}
+.fwrap{max-width:var(--maxw);margin:0 auto;padding:22px 18px;color:var(--faint);font-size:12.5px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}
+.fbtn{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:99px;padding:6px 15px;font-size:13px;cursor:pointer}
+.fbtn.on{color:var(--gold);border-color:var(--gold);background:rgba(233,182,77,.09);font-weight:600}
+.checklist li{list-style:none;margin:8px 0;padding-left:28px;position:relative}
+.checklist li::before{content:"✓";position:absolute;left:0;top:0;color:var(--green);font-weight:700}
+.matrix{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+@media(max-width:640px){.matrix{grid-template-columns:1fr}}
+.mx{border:1px solid var(--line);border-radius:12px;padding:15px;background:var(--panel2);font-size:13.5px}
+.mx h4{font-size:14.5px;margin-bottom:6px}
+.mx .who{color:var(--muted);font-size:12.5px}
+.formula{
+  border:1px solid var(--line);border-radius:10px;background:var(--bg2);padding:13px 16px;margin:10px 0;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13.5px;color:var(--gold2);overflow-x:auto;white-space:nowrap;
+}
+/* ---------- live widgets / search ---------- */
+#tape{border-bottom:1px solid var(--line);background:rgba(13,22,40,.7);min-height:46px}
+.tvw{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--panel);margin-top:14px}
+.searchbar{display:flex;gap:10px;flex-wrap:wrap}
+.searchbar input{
+  flex:1;min-width:200px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;
+  color:var(--text);padding:12px 14px;font-size:15px;outline:none;
+}
+.searchbar input:focus{border-color:var(--gold)}
+details.rules{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);margin-top:26px;padding:0 20px 6px}
+details.rules summary{cursor:pointer;padding:16px 0;font-weight:700;color:var(--gold);font-size:15px;list-style:none;user-select:none}
+details.rules summary::-webkit-details-marker{display:none}
+details.rules summary::before{content:'▸ '}
+details.rules[open] summary::before{content:'▾ '}
+details.rules h1{font-size:21px;margin-top:6px}
+@media print{
+  header,footer,.cta,.tvbox,.filters,.langbtn{display:none!important}
+  body{background:#fff;color:#111}
+  .sec,.panel,.card,.rephead{border-color:#ccc;background:#fff}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hwrap">
+    <div class="brand" onclick="location.hash='#/home'">
+      <div class="logo">◈</div>
+      <div><b>InvestLens</b><small id="brandSub">智投透視 · 投資分析與策略</small></div>
+    </div>
+    <nav id="nav"></nav>
+    <button class="langbtn" id="langBtn" title="切換語言 / Switch language">EN</button>
+  </div>
+</header>
+
+<div id="tape"></div>
+
+<main id="app"></main>
+
+<footer>
+  <div class="fwrap">
+    <div id="footL"></div>
+    <div id="footR"></div>
+  </div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+/* =========================================================
+   InvestLens 智投透視 — 單一檔案雙語投資分析網站
+   Single-file bilingual (zh-Hant / EN) investment research site.
+   ---------------------------------------------------------
+   ▸ 新增分析報告：喺下面 REPORTS 陣列加一個物件即可
+     (To add a report, append an object to the REPORTS array.)
+   ▸ 所有價位／數據截至報告內標示日期，僅供教育參考。
+   ========================================================= */
+
+var LS_LANG='il_lang';
+var L=localStorage.getItem(LS_LANG)||'zh';
+
+function T(o){ if(o==null) return ''; if(typeof o==='string') return o; return (o[L]!==undefined?o[L]:o.zh)||''; }
+
+/* ---------------- UI strings ---------------- */
+var UI={
+ zh:{
+  brandSub:'智投透視 · 投資分析與策略',
+  nav_home:'首頁', nav_reports:'分析報告', nav_live:'即時行情', nav_system:'交易系統', nav_macro:'宏觀經濟', nav_tools:'計算工具', nav_disc:'免責聲明',
+  live_h:'📡 即時行情與新聞', live_sub:'即時報價、環球市場總覽同最新金融新聞（TradingView 提供，需要網絡；部分交易所報價或會延遲最多 15 分鐘）。',
+  live_quotes:'報告標的・即時報價', live_mkt:'環球市場總覽', live_news:'最新市場新聞',
+  m_base:'報告基準價',
+  search_h:'🔍 自選即時分析', search_btn:'分析',
+  search_ph:'輸入代號：AAPL、TSLA、HKEX:700、BINANCE:BTCUSDT…',
+  search_hint:'支援全球股票、ETF、指數、外匯、商品、加密貨幣。美股直接打代號（AAPL）；港股用 HKEX:700；A股 SSE:600519；加密貨幣 BINANCE:BTCUSDT。',
+  az_note:'呢頁係即時自動組合嘅分析（TradingView 數據，自動更新）。四份深度人手報告喺「分析報告」頁。',
+  az_chart:'圖表與技術指標', az_ta:'技術指標綜合信號（即時）', az_fin:'財務數據（如適用）', az_prof:'簡介', az_news:'相關新聞（即時）',
+  sys_h:'📐 交易信號圖表', sys_sub:'即時圖表已預載 Supertrend 買賣信號指標（綠線＝買入／持有區，紅線＝賣出／離場區，紅綠轉色嗰支蠟燭就係信號位），另加 EMA50、SMA200、MACD、RSI；下面嘅信號儀表會即時綜合二十幾個技術指標，直接俾出「買入／賣出／中性」評級。想加更多指標：撳圖表頂部嘅「指標」（Indicators）按鈕；想睇第二隻股票：撳圖表左上角嘅代號直接改。',
+  sys_gauge:'即時買賣評級（綜合技術指標）', sys_read:'點樣讀個圖', sys_rules:'📖 完整交易系統規則（止蝕、止賺、倉位管理教學）',
+  sys_read0:'<b>買賣信號（Supertrend）：</b>綠線喺價格下面＝升勢，買入／持有；紅線喺價格上面＝跌勢，賣出／觀望。<b>紅轉綠嗰支蠟燭＝買入信號位；綠轉紅＝賣出信號位。</b>橫行市信號會較多假動作，記得配合下面三個指標一齊確認。',
+  sys_read1:'<b>趨勢：</b>價格企喺 SMA200 之上＝牛市環境先可以買。EMA50 升穿 SMA200＝黃金交叉（買入傾向）；跌穿＝死亡交叉（離場傾向）。',
+  sys_read2:'<b>動能：</b>MACD 線升穿信號線＝買入動能出現；跌穿＝賣出動能。柱狀圖持續收縮＝預警趨勢轉向。',
+  sys_read3:'<b>超買超賣：</b>RSI 高於 70＝超買（唔好追入）；低於 30＝超賣（留意反彈）。上升趨勢中回調到 RSI 40–50 企穩，係經典入場位。',
+  arw_sub:'自家信號引擎：<b>綠色箭嘴＝買入信號，紅色箭嘴＝賣出信號</b>，直接畫喺圖上；每個信號都有解釋，仲有回測成績。規則：<b>只喺趨勢向上（價企 SMA{t} 之上）時，等動能轉強（EMA{f} 升穿 EMA{s}、RSI≥50）先買；動能轉弱（EMA{f} 跌穿 EMA{s}）或趨勢轉壞（跌穿 SMA{t}）就走</b>。上面可以切換⚡短線或者🗻中長線模式；「＋ 加自選」直接打<b>公司名或者代號</b>都得（例：Tesla、Apple、0700.HK）。',
+  arw_add:'＋ 加自選',
+  arw_mode_h:'⚡ 短線（1小時圖）', arw_mode_d:'🗻 中長線（日線圖）',
+  arw_h_d:'20 個交易日（約一個月）', arw_h_h:'20 支一小時蠟燭（約 3 個交易日）',
+  arw_p_d:'兩年', arw_p_h:'三個月',
+  arw_searching:'🔍 搜尋緊…',
+  arw_upd:'⟳ 最後更新 {t}｜每分鐘自動更新（部分市場報價或延遲最多 15 分鐘）',
+  arw_legend:'圖例：🟡 EMA{f}（快線・動能）　🔵 EMA{s}（慢線・方向）　🟣 SMA{t}（趨勢分界線）　▲ 綠箭嘴＝買入　▼ 紅箭嘴＝賣出　<span id="arwUpd" style="opacity:.8"></span>',
+  arw_status_h:'而家狀態（跟系統規則）', arw_stats_h:'過去{p}回測', arw_log_h:'信號解釋 — 點解嗰個位係 Buy／Sell',
+  arw_long:'持有中', arw_entry:'買入價', arw_flat:'觀望中 — 未有買入信號，等三個條件齊晒先入場，唔好心急。',
+  arw_trades:'完成交易', arw_win:'贏面', arw_avg:'平均每筆', arw_tot:'總回報（複利）',
+  arw_bt_note:'※ 回測用過去{p}嘅收市價計，未計手續費同滑價；過去表現唔代表將來。',
+  arw_no_tr:'過去{p}未有完整嘅買入→賣出循環（可能一直持有緊，或者信號好少）。',
+  arw_none:'呢隻產品過去{p}冇觸發過買入信號 — 可能長期喺 SMA{t} 之下（跌勢規則唔准買）。呢個唔係壞事，係系統保護緊你唔好接刀。',
+  arw_buy_why:'① EMA{f} 升穿 EMA{s} → 動能轉強；② 收市價企喺 SMA{t} 之上 → 趨勢向上，順勢而為；③ RSI {r}（≥50）→ 升勢有動能承接。三個條件同時成立先出買入信號 — 唔係估底，係等趨勢確認先入場。',
+  arw_buy_why2:'① 收市價重上 SMA{t} → 趨勢修復；② EMA{f} 已企喺 EMA{s} 之上 → 動能配合；③ RSI {r}（≥50）→ 動能確認。趨勢重啟，重新入場。',
+  arw_sell_why_cross:'EMA{f} 跌穿 EMA{s} → 動能轉弱。可能只係中途調整，但系統唔靠估 — 紀律係：動能消失就先走，錯咗可以再入返；最緊要唔好俾一次大跌帶走成副身家。',
+  arw_sell_why_break:'收市價跌穿 SMA{t} → 趨勢分界線失守，大型下跌多數係咁開始。風控規則：呢條線之下唔持貨。',
+  arw_load:'📡 載入緊市場數據…',
+  arw_err:'搵唔到「{s}」。可以試：公司名（Tesla）、美股代號（NVDA）、港股（0700.HK）、加密貨幣（BTC-USD）。',
+  arw_spacex:'💡 SpaceX 係私人公司，未上市，冇股票代號，買唔到正股。想追 SpaceX 概念可以加「DXYZ」（Destiny Tech100 — 持有 SpaceX 股份嘅上市基金），但小心：佢股價經常比基金淨值高出好多（大幅溢價），風險極高。',
+  arw_hint_add:'打公司名或者代號：Tesla｜NVDA｜0700.HK｜BTC-USD',
+  arw_ph:'公司名或代號 例：Tesla / 0700.HK', sys_ph:'代號 例：NASDAQ:TSLA / HKEX:700',
+  tvsec_h:'互動圖表（TradingView — 想加咩指標自己加）',
+  arw_pred_h:'未來走勢預測（歷史機率統計）',
+  arw_pred_score:'綜合技術評分',
+  arw_pred_bull:'偏好（傾向上升）', arw_pred_bear:'偏淡（傾向下跌）', arw_pred_neu:'中性（方向未明）',
+  arw_pred_c1:'價格企喺 SMA{t} 之上（趨勢向上）',
+  arw_pred_c2:'EMA{f} 高過 EMA{s}（動能向上）',
+  arw_pred_c3:'SMA{t} 向上傾斜（大勢改善緊）',
+  arw_pred_c4:'RSI ≥ 50（升勢有動能）',
+  arw_pred_c5:'MACD 線高過信號線（動能加速）',
+  arw_pred_ob:'⚠️ RSI {r} 已超買 — 短期可能回調，唔好追高，等回調先',
+  arw_pred_fwd:'歷史統計：過去{p}出現過 <b>{n}</b> 次同而家相似嘅技術狀態，之後 {h} 有 <b>{w}%</b> 機率上升，平均變動 {a}。',
+  arw_pred_few:'歷史統計：同而家相似嘅狀態過去{p}只出現 {n} 次，樣本太少，統計參考價值有限。',
+  arw_pred_rec:'系統建議',
+  arw_pred_rec_hold:'🟢 繼續持有 — 未出賣出信號。離場條件：EMA{f} 跌穿 EMA{s}，或收市跌穿 SMA{t}。唔好因為心急或恐慌提早走，亦唔好加注溝上。',
+  arw_pred_rec_ready:'🟡 條件接近齊晒 — 而家係觀望倉，等觸發事件（EMA{f} 重新升穿 EMA{s}，或價格重上 SMA{t}）先入場。條件齊唔等於即刻買 — 追中段最容易買喺短期頂。',
+  arw_pred_rec_wait:'⚪ 繼續觀望 — 買入條件未齊（上面 ✗ 嗰啲就係欠嘅）。系統寧願錯過機會，都唔願接下跌緊嘅刀。',
+  arw_pred_disc:'※ 世上冇人可以真正預測未來 — 呢度係「歷史上相似狀態之後點行」嘅機率統計，唔係保證，更加唔係個人投資建議。',
+  macro_cal:'經濟日曆（即時更新）', macro_news:'財經新聞（即時更新）', macro_rules:'📖 宏觀分析框架與投資時鐘（教學＋2026年7月判讀）',
+  hero_tag:'雙語投資研究 · 更新至 2026-07-16',
+  hero_h1:'睇通基本面、技術面同宏觀大局，先落單。',
+  hero_sub:'股票 · ETF · 商品深度分析報告，配合有紀律嘅買賣信號系統：入場區、止蝕位、止賺目標、倉位大細，一頁睇晒。',
+  hero_cta1:'瀏覽分析報告', hero_cta2:'交易系統', hero_cta3:'倉位計算機',
+  latest:'最新信號一覽',
+  th_ticker:'代號', th_name:'名稱', th_type:'類別', th_price:'價格', th_signal:'信號', th_risk:'風險', th_updated:'更新',
+  feat_h:'網站內容',
+  feat1_t:'深度分析報告', feat1_p:'每隻標的由基本面、技術面、宏觀背景到情境估值，一份報告講清楚。',
+  feat2_t:'買賣信號系統', feat2_p:'三重過濾：趨勢 → 動能 → 觸發。清晰嘅買入賣出條件，唔靠感覺。',
+  feat3_t:'風險管理', feat3_p:'每個交易計劃都有止蝕位、止賺目標同建議倉位，先計輸幾多，再諗贏幾多。',
+  feat4_t:'宏觀儀表板', feat4_p:'利率、通脹、市場政權（regime）判讀，決定資產配置嘅大方向。',
+  reports_h:'分析報告', reports_sub:'每份報告包含：快速定位 → 基本面 → 技術面 → 宏觀 → 情境估值 → 交易計劃 → 風險。',
+  f_all:'全部', f_stock:'股票', f_etf:'ETF', f_comm:'商品／其他',
+  type_stock:'股票', type_etf:'ETF', type_comm:'商品',
+  view_report:'查看報告 →', back:'← 返回報告列表',
+  m_price:'價格', m_asof:'數據截至', m_signal:'現時信號', m_risk:'風險評級', m_updated:'報告更新',
+  tv_cap:'即時圖表由 TradingView 提供（需要網絡）。離線時請用你嘅券商圖表覆核價位。',
+  risk_lbl:['','極低','較低','中等','偏高','極高'],
+  sig:{buy:'買入',acc:'分段吸納',hold:'持有',watch:'觀望',avoid:'迴避／減持'},
+  disc_short:'本網站所有內容僅供教育及資訊參考，唔構成任何投資建議。價位為示例，投資前請自行核實並諮詢持牌顧問。',
+  foot_r:'InvestLens 智投透視 · 教育用途 · 非投資建議',
+  updated_lbl:'數據截至 2026-07-16（美東）'
+ },
+ en:{
+  brandSub:'Investment Research & Strategy',
+  nav_home:'Home', nav_reports:'Reports', nav_live:'Live Markets', nav_system:'Trading System', nav_macro:'Macro', nav_tools:'Calculators', nav_disc:'Disclaimer',
+  live_h:'📡 Live Markets & News', live_sub:'Real-time quotes, global market overview and the latest financial news (by TradingView; requires network — some exchange quotes may be delayed up to 15 minutes).',
+  live_quotes:'Covered Assets — Live Quotes', live_mkt:'Global Market Overview', live_news:'Latest Market News',
+  m_base:'Report base price',
+  search_h:'🔍 Analyze Any Ticker', search_btn:'Analyze',
+  search_ph:'Enter a symbol: AAPL, TSLA, HKEX:700, BINANCE:BTCUSDT…',
+  search_hint:'Supports global stocks, ETFs, indices, forex, commodities and crypto. US stocks: just the ticker (AAPL); Hong Kong: HKEX:700; Shanghai: SSE:600519; crypto: BINANCE:BTCUSDT.',
+  az_note:'This page is an automatically assembled live analysis (TradingView data, auto-updating). The four in-depth written reports are on the Reports page.',
+  az_chart:'Chart & Indicators', az_ta:'Composite Indicator Signal (live)', az_fin:'Financials (where applicable)', az_prof:'Profile', az_news:'Related News (live)',
+  sys_h:'📐 Signal Chart', sys_sub:'The live chart comes preloaded with the Supertrend buy/sell signal indicator (green line = buy/hold zone, red line = sell/exit zone — the candle where the colour flips is the signal), plus EMA50, SMA200, MACD and RSI; the gauge below aggregates 20+ technical indicators in real time into an explicit Buy / Sell / Neutral rating. To add more indicators, use the “Indicators” button at the top of the chart; to analyse another asset, click the symbol at the chart\'s top-left and type any ticker.',
+  sys_gauge:'Live Buy/Sell Rating (composite of indicators)', sys_read:'How to Read the Chart', sys_rules:'📖 Full Trading-System Rules (stops, targets, position sizing)',
+  sys_read0:'<b>Buy/Sell signal (Supertrend):</b> green line below price = uptrend, buy/hold; red line above price = downtrend, sell/stand aside. <b>The candle where red flips to green = buy signal; green to red = sell signal.</b> Expect more false flips in sideways markets — confirm with the three indicators below.',
+  sys_read1:'<b>Trend:</b> price above the SMA200 = bull environment, a precondition for buying. EMA50 crossing above SMA200 = golden cross (buy bias); crossing below = death cross (exit bias).',
+  sys_read2:'<b>Momentum:</b> MACD line crossing above its signal line = buy momentum; crossing below = sell momentum. A steadily shrinking histogram warns of a turn.',
+  sys_read3:'<b>Overbought/oversold:</b> RSI above 70 = overbought (don\'t chase); below 30 = oversold (watch for a bounce). In an uptrend, a pullback holding RSI 40–50 is the classic entry.',
+  arw_sub:'Our own signal engine: <b>green arrows = buy signals, red arrows = sell signals</b>, drawn right on the chart, with a plain-language explanation for every signal and a backtest below. The rules: <b>only buy when the trend is up (price above SMA{t}) and momentum turns on (EMA{f} crosses above EMA{s}, RSI≥50); exit when momentum fades (EMA{f} below EMA{s}) or the trend breaks (close below SMA{t})</b>. Switch ⚡short-term / 🗻mid-long-term modes above; “＋ Add” accepts <b>company names or symbols</b> (e.g. Tesla, Apple, 0700.HK).',
+  arw_add:'＋ Add',
+  arw_mode_h:'⚡ Short-term (1-hour)', arw_mode_d:'🗻 Mid/long-term (daily)',
+  arw_h_d:'20 trading days (~1 month)', arw_h_h:'20 hourly candles (~3 trading days)',
+  arw_p_d:'two years', arw_p_h:'three months',
+  arw_searching:'🔍 Searching…',
+  arw_upd:'⟳ Updated {t} | auto-refreshes every minute (some markets may be delayed up to 15 min)',
+  arw_legend:'Legend: 🟡 EMA{f} (fast, momentum)　🔵 EMA{s} (slow, direction)　🟣 SMA{t} (trend line)　▲ green = buy　▼ red = sell　<span id="arwUpd" style="opacity:.8"></span>',
+  arw_status_h:'Current Status (per system rules)', arw_stats_h:'Backtest (past {p})', arw_log_h:'Signal Explanations — why each Buy/Sell fired',
+  arw_long:'Holding', arw_entry:'entry', arw_flat:'Standing aside — no buy signal yet; wait for all three conditions to align. No rush.',
+  arw_trades:'Closed trades', arw_win:'Win rate', arw_avg:'Avg per trade', arw_tot:'Total return (compounded)',
+  arw_bt_note:'※ Backtest uses the past {p} of closes; excludes fees and slippage. Past performance does not guarantee future results.',
+  arw_no_tr:'No completed buy→sell cycle in the past {p} (possibly still holding, or very few signals).',
+  arw_none:'No buy signals in the past {p} — likely the price stayed below the SMA{t} (the rules forbid buying in a downtrend). That is the system protecting you from catching knives.',
+  arw_buy_why:'① EMA{f} crossed above EMA{s} → momentum turned up; ② close above SMA{t} → uptrend, trade with the trend; ③ RSI {r} (≥50) → momentum confirmed. All three aligned — this is trend confirmation, not bottom-guessing.',
+  arw_buy_why2:'① Close reclaimed the SMA{t} → trend repaired; ② EMA{f} already above EMA{s} → momentum supportive; ③ RSI {r} (≥50) → momentum confirmed. Trend restart — re-enter.',
+  arw_sell_why_cross:'EMA{f} crossed below EMA{s} → momentum faded. It may only be a pullback, but the system never guesses: when momentum dies, step aside first — you can always re-enter, but you can\'t undo a crash.',
+  arw_sell_why_break:'Close broke below the SMA{t} → the trend line failed; most major declines start exactly like this. Risk rule: hold nothing below this line.',
+  arw_load:'📡 Loading market data…',
+  arw_err:'Could not find “{s}”. Try: a company name (Tesla), US symbol (NVDA), Hong Kong (0700.HK), crypto (BTC-USD).',
+  arw_spacex:'💡 SpaceX is a private company — not listed, no ticker, no shares to buy. To track SpaceX exposure, add “DXYZ” (Destiny Tech100, a listed fund holding SpaceX shares) — but beware: it often trades far above its net asset value. Extremely high risk.',
+  arw_hint_add:'Type a company name or symbol: Tesla | NVDA | 0700.HK | BTC-USD',
+  arw_ph:'Name or symbol e.g. Tesla / 0700.HK', sys_ph:'Symbol e.g. NASDAQ:TSLA / HKEX:700',
+  tvsec_h:'Interactive Chart (TradingView — add any indicator yourself)',
+  arw_pred_h:'Forward Outlook (historical probability)',
+  arw_pred_score:'Composite technical score',
+  arw_pred_bull:'Bullish bias (leaning up)', arw_pred_bear:'Bearish bias (leaning down)', arw_pred_neu:'Neutral (no clear edge)',
+  arw_pred_c1:'Price above SMA{t} (uptrend)',
+  arw_pred_c2:'EMA{f} above EMA{s} (momentum up)',
+  arw_pred_c3:'SMA{t} sloping upward (big picture improving)',
+  arw_pred_c4:'RSI ≥ 50 (momentum behind the rise)',
+  arw_pred_c5:'MACD line above signal line (momentum accelerating)',
+  arw_pred_ob:'⚠️ RSI {r} is overbought — a near-term pullback is likely; don\'t chase, wait for a dip',
+  arw_pred_fwd:'Historical stats: over the past {p} this exact technical state appeared <b>{n}</b> times; over the following {h} price rose <b>{w}%</b> of the time, average move {a}.',
+  arw_pred_few:'Historical stats: only {n} similar states in the past {p} — sample too small to be meaningful.',
+  arw_pred_rec:'System recommendation',
+  arw_pred_rec_hold:'🟢 Keep holding — no sell signal yet. Exit when EMA{f} crosses below EMA{s} or price closes below SMA{t}. Don\'t exit early out of fear, and don\'t average down.',
+  arw_pred_rec_ready:'🟡 Conditions nearly aligned — currently flat; wait for a trigger event (EMA{f} re-crossing above EMA{s}, or price reclaiming SMA{t}) before entering. Aligned conditions ≠ buy now; chasing mid-move is how you buy short-term tops.',
+  arw_pred_rec_wait:'⚪ Stay on the sidelines — buy conditions not met (the ✗ items above are what\'s missing). The system would rather miss a move than catch a falling knife.',
+  arw_pred_disc:'※ Nobody can truly predict the future — this is a probability read of “what happened after similar states historically”, not a guarantee, and not personal investment advice.',
+  macro_cal:'Economic Calendar (live)', macro_news:'Financial News (live)', macro_rules:'📖 Macro Framework & Investment Clock (tutorial + July 2026 read)',
+  hero_tag:'Bilingual research · Updated 2026-07-16',
+  hero_h1:'See the fundamentals, technicals and macro picture — before you trade.',
+  hero_sub:'In-depth reports on stocks, ETFs and commodities, paired with a disciplined signal system: entry zones, stop-loss, profit targets and position sizing on one page.',
+  hero_cta1:'Browse Reports', hero_cta2:'Trading System', hero_cta3:'Position Calculator',
+  latest:'Latest Signals',
+  th_ticker:'Ticker', th_name:'Name', th_type:'Type', th_price:'Price', th_signal:'Signal', th_risk:'Risk', th_updated:'Updated',
+  feat_h:'What\'s Inside',
+  feat1_t:'Deep-Dive Reports', feat1_p:'Fundamentals, technicals, macro context and scenario valuation — one clear report per asset.',
+  feat2_t:'Buy/Sell Signal System', feat2_p:'Triple filter: Trend → Momentum → Trigger. Explicit entry and exit rules, not gut feel.',
+  feat3_t:'Risk Management', feat3_p:'Every trade plan defines stop-loss, profit targets and position size. Know your loss before your gain.',
+  feat4_t:'Macro Dashboard', feat4_p:'Rates, inflation and market-regime reads that set the asset-allocation big picture.',
+  reports_h:'Research Reports', reports_sub:'Each report: quick take → fundamentals → technicals → macro → scenarios → trade plan → risks.',
+  f_all:'All', f_stock:'Stocks', f_etf:'ETFs', f_comm:'Commodities / Other',
+  type_stock:'Stock', type_etf:'ETF', type_comm:'Commodity',
+  view_report:'Read report →', back:'← Back to reports',
+  m_price:'Price', m_asof:'Data as of', m_signal:'Current signal', m_risk:'Risk rating', m_updated:'Report updated',
+  tv_cap:'Live chart by TradingView (requires network). When offline, verify levels on your broker\'s chart.',
+  risk_lbl:['','Very Low','Low','Medium','High','Very High'],
+  sig:{buy:'Buy',acc:'Accumulate',hold:'Hold',watch:'Watch',avoid:'Avoid / Reduce'},
+  disc_short:'All content on this site is for education and information only and is not investment advice. Prices are illustrative — verify independently and consult a licensed adviser before investing.',
+  foot_r:'InvestLens · Educational use · Not investment advice',
+  updated_lbl:'Data as of 2026-07-16 (US ET)'
+ }
+};
+function t(k){ var v=UI[L][k]; if(v===undefined) v=UI.zh[k]; return v===undefined?k:v; }
+
+/* ---------------- Research reports data ----------------
+   每份報告一個物件；body 內可以直接寫 HTML。價位截至 asOf 日期，屬示例性質。 */
+var REPORTS=[
+
+/* ============ USAR ============ */
+{
+ id:'usar', ticker:'USAR', tv:'NASDAQ:USAR', type:'stock',
+ name:{zh:'USA Rare Earth（美國稀土）',en:'USA Rare Earth, Inc.'},
+ price:'$17.34', asOf:'2026-07-15', updated:'2026-07-17',
+ range:{zh:'52週範圍 $10.50 – $43.98（現價較高位回落約 61%）',en:'52-wk range $10.50 – $43.98 (about 61% off the high)'},
+ signal:'watch', risk:5,
+ tags:[{zh:'稀土／關鍵礦物',en:'Rare earths / critical minerals'},{zh:'國防供應鏈',en:'Defense supply chain'},{zh:'未有收入・高投機性',en:'Pre-revenue · speculative'}],
+ summary:{
+  zh:'發展階段稀土股：磁鐵廠爬坡 + Round Top 礦藏選擇權。高風險高賠率嘅主題投機，靠政策同執行力。現價喺下降趨勢中築底，宜觀望等訊號。',
+  en:'Development-stage rare-earth play: magnet plant ramp plus Round Top optionality. High-risk, high-optionality thematic bet on policy and execution. Basing within a downtrend — wait for a signal.'
+ },
+ sections:[
+ {ic:'🧭',title:{zh:'快速定位',en:'Quick Take'},body:{
+  zh:'<p>USAR 係一間<b>發展階段</b>嘅稀土／關鍵礦物公司，2025 年初經 SPAC（Inflection Point Acquisition Corp II）上市。呢個係一個<b>未有收入／商業化初期</b>嘅故事，唔係現金流生意——估值方法要完全唔同。</p><p>2025 年尾稀土狂熱期股價一度炒上 <b>$43.98</b>，之後因為<b>配股攤薄</b>同「距離有意義收入仲有幾年」嘅現實，回落至 7 月中約 <b>$17.3</b>。分析師 12 個月平均目標價約 $36–39.5，但呢類目標價喺投機股上參考價值有限。</p>',
+  en:'<p>USAR is a <b>development-stage</b> rare-earth / critical-minerals company that listed in early 2025 via SPAC (Inflection Point Acquisition Corp II). This is a <b>pre-revenue / early-commercialization story</b>, not a cash-flowing business — value it accordingly.</p><p>The stock spiked to <b>$43.98</b> during the late-2025 rare-earth frenzy, then slid to about <b>$17.3</b> by mid-July on <b>dilution</b> from equity raises and the reality that meaningful revenue is still years away. Analyst 12-month targets average $36–39.5, but such targets carry limited weight for speculative names.</p>'
+ }},
+ {ic:'🏭',title:{zh:'業務概況',en:'Business Snapshot'},body:{
+  zh:'<p><b>雙引擎模式：</b></p><ul><li><b>Round Top 礦藏（德州西部）</b>——重稀土＋輕稀土、鋰、鎵及其他關鍵礦物。儲量大但品位低、開發週期長。</li><li><b>磁鐵製造（俄克拉荷馬州 Stillwater）</b>——燒結釹鐵硼（NdFeB）永磁體，瞄準目前由中國主導嘅本土供應鏈／國防／電動車磁鐵缺口。</li></ul><p><b>投資主題：</b>垂直整合嘅「礦山到磁鐵」（mine-to-magnet）美國供應鏈champion，乘住製造業回流＋國防需求＋中國出口管制三重順風。</p><table><tr><th>關鍵假設</th><th>內容</th></tr><tr><td>磁鐵廠爬坡</td><td>2025–26 首批商業產出；2027 年後先有規模</td></tr><tr><td>Round Top 投產</td><td>大概率 2028 年之後；審批＋資本開支風險重</td></tr><tr><td>資金需求</td><td>龐大；股權／債務攤薄幾乎必然</td></tr><tr><td>NdPr／磁鐵價格</td><td>波動大，長期受中國壓價</td></tr><tr><td>政府支持</td><td>國防部撥款、DPA Title III、包銷／價格下限機制係關鍵變數</td></tr></table>',
+  en:'<p><b>Two-pronged model:</b></p><ul><li><b>Round Top deposit (West Texas)</b> — heavy + light rare earths, lithium, gallium and other critical minerals. Large but low-grade, long-dated resource.</li><li><b>Magnet manufacturing (Stillwater, Oklahoma)</b> — sintered NdFeB permanent magnets targeting the domestic supply-chain / defense / EV magnet gap currently dominated by China.</li></ul><p><b>Thesis:</b> a vertically integrated “mine-to-magnet” U.S. champion riding reshoring, defense demand and China export-control tailwinds.</p><table><tr><th>Key assumption</th><th>Detail</th></tr><tr><td>Magnet plant ramp</td><td>First commercial output 2025–26; meaningful volume 2027+</td></tr><tr><td>Round Top mine</td><td>First production likely 2028+; heavy permitting / capex risk</td></tr><tr><td>Capex needs</td><td>Substantial; equity/debt dilution highly likely</td></tr><tr><td>NdPr / magnet pricing</td><td>Volatile, structurally China-suppressed</td></tr><tr><td>Government support</td><td>DoD grants, DPA Title III, offtake / price-floor mechanisms are swing factors</td></tr></table>'
+ }},
+ {ic:'📊',title:{zh:'基本面分析',en:'Fundamental Analysis'},body:{
+  zh:'<ul><li><b>收入：</b>近乎零。價值來自未來磁鐵產能＋礦藏嘅<b>選擇權（optionality）</b>，唔係盈利。</li><li><b>現金消耗：</b>建廠＋開礦燒錢快，<span class="hl">現金跑道（cash runway）係一號監察指標</span>——每季睇現金結餘 vs 消耗速度。</li><li><b>攤薄：</b>2026 年上半年嘅回調，好大程度反映市場消化多輪配股。持有人要預期股數持續膨脹。</li><li><b>政策槓桿：</b>國防部合約、政府包銷或價格下限一旦落實，可以即刻改寫經濟模型——呢啲係股價嘅真正催化劑。</li><li><b>估值：</b>傳統 DCF 喺呢度只係擺設。合理框架係情境加權：磁鐵業務達產嘅機會 × 屆時嘅策略性溢價（參考 MP Materials 嘅倍數）。</li></ul>',
+  en:'<ul><li><b>Revenue:</b> near zero. Value comes from <b>optionality</b> on future magnet capacity plus the resource — not earnings.</li><li><b>Cash burn:</b> plant construction and mine development burn cash fast. <span class="hl">Cash runway is the #1 metric</span> — track cash balance vs. burn every quarter.</li><li><b>Dilution:</b> the H1-2026 drawdown largely reflects the market digesting repeated equity raises. Expect the share count to keep growing.</li><li><b>Policy leverage:</b> DoD contracts, government offtakes or price floors would instantly rewrite the economics — these are the real share-price catalysts.</li><li><b>Valuation:</b> a traditional DCF is decorative here. The honest framework is scenario-weighting: probability the magnet business reaches scale × the strategic-scarcity multiple it would then command (see MP Materials).</li></ul>'
+ }},
+ {ic:'📈',title:{zh:'技術面分析',en:'Technical Analysis'},body:{
+  zh:'<p><b>趨勢判讀：</b>股價較 2025 年高位回落約 61%，處於 200 日均線下方，<b>中期下降趨勢／底部整固階段</b>。呢類形態最忌心急左側接刀。</p><div class="lv"><span class="sup">支持 $15.0–16.0（近期低位區）</span><span class="sup">支持 $13.0</span><span class="sup">重要支持 $10.5（52週低）</span><span class="res">阻力 $18.5–19.0</span><span class="res">阻力 $22.0（前平台）</span><span class="res">阻力 $26.0</span></div><ul><li><b>結構：</b>高位急跌後喺 $15–19 區間橫行，成交萎縮——典型消化攤薄嘅築底行為，但未確認見底。</li><li><b>確認訊號：</b>放量收市企穩 <b>$22</b> 以上，先算突破下降結構；反之收市跌穿 <b>$15</b>，好可能重試 $13 甚至 $10.5。</li><li><b>波動性：</b>Beta 極高、消息驅動。用日線收市價做訊號，唔好被盤中假突破搖走。</li></ul><p class="mini">※ 以上水平為編製報告時嘅示例讀數，操作前請以最新圖表覆核。</p>',
+  en:'<p><b>Trend read:</b> down about 61% from the 2025 high and below the 200-day moving average — a <b>medium-term downtrend / basing phase</b>. The classic mistake in this pattern is catching the knife early.</p><div class="lv"><span class="sup">Support $15.0–16.0 (recent lows)</span><span class="sup">Support $13.0</span><span class="sup">Major support $10.5 (52-wk low)</span><span class="res">Resistance $18.5–19.0</span><span class="res">Resistance $22.0 (prior shelf)</span><span class="res">Resistance $26.0</span></div><ul><li><b>Structure:</b> after the collapse, price is ranging $15–19 on shrinking volume — typical dilution-digestion basing, but no confirmed bottom yet.</li><li><b>Confirmation:</b> a high-volume close above <b>$22</b> would break the downtrend structure; a close below <b>$15</b> likely retests $13 and possibly $10.5.</li><li><b>Volatility:</b> extremely high beta, news-driven. Use daily closes for signals; ignore intraday head-fakes.</li></ul><p class="mini">※ Levels are illustrative as of writing — verify on a live chart before acting.</p>'
+ }},
+ {ic:'🌐',title:{zh:'宏觀背景',en:'Macro Context'},body:{
+  zh:'<ul><li><b>地緣政治：</b>中國稀土出口管制係成個板塊嘅敘事引擎——管制收緊利好，放寬即殺估值。</li><li><b>政策週期：</b>美國關鍵礦物本土化係跨黨派共識，但撥款節奏受預算政治影響。</li><li><b>利率環境：</b>2026 年 7 月聯邦基金利率企喺 3.50–3.75%、通脹約 4.2%、聯儲局取態偏鷹（詳見宏觀頁）。<span class="hl">高利率對燒錢兼要不斷融資嘅公司係直接逆風</span>——融資成本貴、攤薄更痛。</li><li><b>板塊聯動：</b>同 MP Materials 及稀土指數高度相關；板塊資金流走時，基本面幾好都會被拖低。</li></ul>',
+  en:'<ul><li><b>Geopolitics:</b> China\'s rare-earth export controls are the narrative engine for the whole sector — tighter controls lift it, easing kills the multiple.</li><li><b>Policy cycle:</b> onshoring critical minerals is bipartisan consensus in the U.S., but funding cadence depends on budget politics.</li><li><b>Rates:</b> as of July 2026 the fed funds rate sits at 3.50–3.75%, inflation runs about 4.2% and the Fed leans hawkish (see Macro page). <span class="hl">High rates are a direct headwind for cash-burning serial issuers</span> — financing costs more and dilution hurts more.</li><li><b>Sector beta:</b> highly correlated with MP Materials and rare-earth indices; when money leaves the theme, fundamentals won\'t save the stock.</li></ul>'
+ }},
+ {ic:'⚖️',title:{zh:'情境估值',en:'Scenario Valuation'},body:{
+  zh:'<p>因為未有收入，任何估值都係<b>情境推演</b>而非精確計算：</p><div class="scen"><div class="sc bull"><h4>🐂 牛市情境</h4><ul><li>磁鐵廠達至約 5,000 噸／年滿產，訂價強勁</li><li>政府包銷鎖定毛利；Round Top 推進</li><li>獲得「策略稀缺性」溢價（MP 式重估）</li></ul><p><b>含義：</b>市值可達數十億美元級；重返 $36–44 高位區有理據。</p></div><div class="sc base"><h4>⚖️ 基本情境</h4><ul><li>磁鐵廠爬坡偏慢、部分產能利用、毛利平平</li><li>Round Top 維持係一個未融資嘅選擇權</li><li>持續攤薄抵銷部分價值創造</li></ul><p><b>含義：</b>估值靠磁鐵業務選擇權＋策略溢價支撐；股價區間震盪至溫和向上（示例 $15–26）。</p></div><div class="sc bear"><h4>🐻 熊市情境</h4><ul><li>爬坡延誤、成本超支、稀土價格疲弱</li><li>融資環境轉差，被迫低價配股</li><li>Round Top 卡喺審批／經濟性</li></ul><p><b>含義：</b>重大下行；<span class="hl">50%+ 回撤風險</span>，跌返 $8–11 硬資產／現金底線唔出奇。</p></div></div>',
+  en:'<p>With no revenue, any valuation is <b>scenario reasoning</b>, not precision math:</p><div class="scen"><div class="sc bull"><h4>🐂 Bull Case</h4><ul><li>Magnet plant scales to ~5,000 t/yr at strong pricing</li><li>Government offtakes lock in margins; Round Top advances</li><li>Re-rates on strategic-scarcity premium (MP-style)</li></ul><p><b>Implied:</b> multi-billion valuation; a return to the $36–44 zone becomes defensible.</p></div><div class="sc base"><h4>⚖️ Base Case</h4><ul><li>Slower ramp, partial utilization, modest margins</li><li>Round Top stays an unfinanced call option</li><li>Ongoing dilution offsets part of the value creation</li></ul><p><b>Implied:</b> value rests on magnet optionality + strategic premium; range-bound to modestly higher (illustrative $15–26).</p></div><div class="sc bear"><h4>🐻 Bear Case</h4><ul><li>Ramp delays, cost overruns, weak rare-earth pricing</li><li>Expensive, dilutive raises in a tight funding market</li><li>Round Top stalls on permitting / economics</li></ul><p><b>Implied:</b> material downside; <span class="hl">50%+ drawdown risk</span> — a slide back to the $8–11 hard-asset floor would not be surprising.</p></div></div>'
+ }},
+ {ic:'🎯',cls:'plan',title:{zh:'交易計劃（示例）',en:'Trade Plan (Illustrative)'},body:{
+  zh:'<p><b>現時信號：<span class="hl">觀望</span></b>——下降趨勢未破，唔追唔撈底，等結構確認。</p><table><tr><th>方案</th><th>入場</th><th>止蝕</th><th>目標</th><th>風險回報</th></tr><tr><td><b>A. 右側突破</b>（較穩妥）</td><td>放量收市企穩 $22 以上，約 $22.3 入場</td><td>$19.4（突破位下方；風險約 13%）</td><td>T1 $26 ／ T2 $32 ／ T3 $39</td><td>1.3R ／ 3.3R ／ 5.8R</td></tr><tr><td><b>B. 左側分段吸納</b>（進取投機）</td><td>$15.0–16.0 分兩注，平均約 $15.5</td><td>收市跌穿 $12.8（風險約 17%）</td><td>T1 $19 ／ T2 $22 ／ T3 $26</td><td>1.3R ／ 2.4R ／ 3.9R</td></tr></table><ul><li><b>止賺執行：</b>到 T1 沽三分一、T2 再沽三分一，餘下用 20 日低位或 3×ATR 移動止賺追蹤。</li><li><b>倉位紀律：</b>呢類投機股佔整體組合 <b>≤2–3%</b>；單筆交易風險（入場價−止蝕價）×股數 <b>≤帳戶 1%</b>。用「計算工具」頁自動計股數。</li><li><b>作廢條件：</b>公佈大型折讓配股、磁鐵廠出貨再延期、或收市跌穿 $12.8——計劃即時作廢，重新評估。</li></ul>',
+  en:'<p><b>Current signal: <span class="hl">WATCH</span></b> — downtrend intact. Don\'t chase, don\'t bottom-fish; wait for structural confirmation.</p><table><tr><th>Setup</th><th>Entry</th><th>Stop-loss</th><th>Targets</th><th>R:R</th></tr><tr><td><b>A. Breakout</b> (higher-probability)</td><td>High-volume close above $22; enter ~$22.3</td><td>$19.4 (below breakout shelf; ~13% risk)</td><td>T1 $26 / T2 $32 / T3 $39</td><td>1.3R / 3.3R / 5.8R</td></tr><tr><td><b>B. Scale-in at support</b> (aggressive)</td><td>Two tranches at $15.0–16.0, avg ~$15.5</td><td>Close below $12.8 (~17% risk)</td><td>T1 $19 / T2 $22 / T3 $26</td><td>1.3R / 2.4R / 3.9R</td></tr></table><ul><li><b>Profit-taking:</b> sell 1/3 at T1, 1/3 at T2, trail the rest with a 20-day-low or 3×ATR stop.</li><li><b>Sizing discipline:</b> cap this class of speculation at <b>≤2–3% of the portfolio</b>; per-trade risk (entry − stop) × shares <b>≤1% of the account</b>. Use the Calculators page to size it.</li><li><b>Invalidation:</b> a large discounted equity raise, another magnet-shipment delay, or a close below $12.8 voids the plan — reassess from scratch.</li></ul>'
+ }},
+ {ic:'⚠️',title:{zh:'主要風險',en:'Key Risks'},body:{
+  zh:'<ol><li><b>融資／攤薄</b>——資本開支重、無自給現金流，配股會一輪接一輪。</li><li><b>執行風險</b>——規模化磁鐵製造好難，公司營運往績有限。</li><li><b>稀土價格操縱</b>——中國控制定價，可以放量壓價打擊西方生產商。</li><li><b>Round Top 經濟性</b>——低品位、長週期，商業規模未經驗證。</li><li><b>政策依賴</b>——主題高度依賴美國政府持續支持／關稅／包銷。</li><li><b>SPAC 遺留結構</b>——留意認股權證、禁售期屆滿同流通盤變化。</li><li><b>情緒驅動</b>——靠敘事炒作，消息同動能主導，非基本面。</li></ol>',
+  en:'<ol><li><b>Financing / dilution</b> — heavy capex, no self-funding cash flow; expect repeated equity raises.</li><li><b>Execution risk</b> — magnet manufacturing at scale is hard; limited operating history.</li><li><b>Rare-earth price manipulation</b> — China controls pricing and can flood the market to undercut Western producers.</li><li><b>Round Top economics</b> — low grade, long timeline, unproven at commercial scale.</li><li><b>Policy dependency</b> — thesis leans heavily on continued U.S. government support / tariffs / offtakes.</li><li><b>SPAC-legacy structure</b> — watch warrants, lock-up expirations and float dynamics.</li><li><b>Speculative sentiment</b> — trades on narrative; sharp swings on news and momentum, not fundamentals.</li></ol>'
+ }},
+ {ic:'👀',title:{zh:'未來 12 個月觀察清單',en:'Watch Items — Next 12 Months'},body:{
+  zh:'<ul class="checklist"><li>磁鐵廠認證進度同首批商業出貨量（每季核對）</li><li>國防部／能源部撥款、DPA Title III 合約公佈</li><li>包銷協議（offtake）簽署——特別係有價格下限嘅</li><li>現金結餘 vs 每季燒錢速度（跑道少過 4 季＝警號）</li><li>配股／可換股債公告（攤薄事件）</li><li>中國出口管制政策變化（雙向影響）</li></ul>',
+  en:'<ul class="checklist"><li>Magnet plant qualification and first commercial shipment volumes (check quarterly)</li><li>DoD / DoE funding awards, DPA Title III contract announcements</li><li>Offtake agreements signed — especially any with price floors</li><li>Cash balance vs. quarterly burn (runway under 4 quarters = red flag)</li><li>Equity raise / convertible announcements (dilution events)</li><li>Changes in China\'s export-control policy (cuts both ways)</li></ul>'
+ }},
+ {ic:'🧾',title:{zh:'總結',en:'Bottom Line'},body:{
+  zh:'<p>USAR 係一注<b>高風險、高選擇權價值</b>嘅美國稀土獨立化主題投機——近期價值主要睇<b>磁鐵廠爬坡</b>，唔係個礦。只適合接受投機、攤薄、政策二元結果同大幅回撤嘅資金。<b>倉位要細</b>，用上面嘅交易計劃等訊號、守止蝕，將注意力放喺磁鐵產量里程碑、政府合約同現金跑道呢三個真催化劑上。</p>',
+  en:'<p>USAR is a <b>high-risk, high-optionality</b> thematic bet on U.S. rare-earth independence, driven near-term far more by the <b>magnet manufacturing ramp</b> than the mine. Suitable only for capital that can tolerate speculation, dilution, binary policy outcomes and deep drawdowns. <b>Keep the position small</b>, let the trade plan above wait for its signal, honour the stop, and keep your attention on the three real catalysts: magnet production milestones, government contracts and cash runway.</p>'
+ }}
+ ]
+},
+
+/* ============ NVDA ============ */
+{
+ id:'nvda', ticker:'NVDA', tv:'NASDAQ:NVDA', type:'stock',
+ name:{zh:'NVIDIA（英偉達）',en:'NVIDIA Corporation'},
+ price:'$212.50', asOf:'2026-07-15', updated:'2026-07-17',
+ range:{zh:'52週範圍 $164.07 – $236.54；預測市盈率約 21 倍',en:'52-wk range $164.07 – $236.54; forward P/E ~21x'},
+ signal:'hold', risk:3,
+ tags:[{zh:'AI 晶片龍頭',en:'AI chip leader'},{zh:'大型科技',en:'Mega-cap tech'},{zh:'核心持股候選',en:'Core holding candidate'}],
+ summary:{
+  zh:'AI 算力龍頭，盈利實在、估值回落至約 21 倍預測市盈率。趨勢向上但近歷史高位有阻力，策略：持有＋等回調分段買，唔高追。',
+  en:'The AI-compute leader with real earnings and a valuation back at ~21x forward. Uptrend intact but near-highs resistance argues for hold + buy-the-dip rather than chasing.'
+ },
+ sections:[
+ {ic:'🧭',title:{zh:'快速定位',en:'Quick Take'},body:{
+  zh:'<p>NVIDIA 係 AI 算力嘅絕對龍頭——同 USAR 呢類主題股相反，<b>佢有真金白銀嘅盈利</b>：下季度收入指引約 <b>$91B（910 億美元）</b>，預測市盈率回落至約 <b>21 倍</b>，以佢嘅增速嚟講唔算貴（高盛 7 月直言 21.7 倍係「compelling」）。</p><p>7 月 10 日因為美國放寬對阿聯酋（UAE）AI 晶片出口管制，單日升 4%。現價 $212.5，離 52 週高位 $236.5 約 10%。核心問題唔係「公司好唔好」，而係「呢個位入場值唔值博」。</p>',
+  en:'<p>NVIDIA is the undisputed leader in AI compute — and unlike thematic names like USAR, <b>it has real earnings</b>: next-quarter revenue is guided at about <b>$91B</b> and the forward P/E has compressed to roughly <b>21x</b>, undemanding for its growth (Goldman called 21.7x “compelling” in July).</p><p>Shares rose 4% on July 10 after the U.S. eased AI-chip export controls to the UAE. At $212.5 the stock sits about 10% below its 52-week high of $236.5. The question is not “is this a good company” but “does this entry price offer a good bet.”</p>'
+ }},
+ {ic:'🏭',title:{zh:'業務概況',en:'Business Snapshot'},body:{
+  zh:'<ul><li><b>數據中心（收入主力）：</b>AI 訓練＋推理 GPU 平台，配合 NVLink／InfiniBand 網絡設備，賣嘅係成套系統唔係單粒晶片。</li><li><b>護城河：</b>CUDA 軟件生態 15 年沉澱——開發者鎖定效應係對手最難複製嘅部分。</li><li><b>產品節奏：</b>一年一平台嘅節奏（Blackwell 之後下一代平台持續推進），保持性能代差。</li><li><b>客戶結構:</b>超大規模雲廠商（hyperscalers）佔比高——係增長引擎，亦係集中風險。</li><li><b>其他業務：</b>遊戲、專業視覺化、汽車——健康但同數據中心比已係配菜。</li></ul>',
+  en:'<ul><li><b>Data center (revenue core):</b> AI training + inference GPU platforms sold as full systems with NVLink / InfiniBand networking — not just chips.</li><li><b>Moat:</b> the CUDA software ecosystem, 15 years deep — developer lock-in is the hardest part for rivals to replicate.</li><li><b>Product cadence:</b> a platform-a-year rhythm (Blackwell and successors) sustains the performance gap.</li><li><b>Customer mix:</b> hyperscalers dominate — both the growth engine and a concentration risk.</li><li><b>Other segments:</b> gaming, pro-viz, automotive — healthy, but side dishes next to data center.</li></ul>'
+ }},
+ {ic:'📊',title:{zh:'基本面分析',en:'Fundamental Analysis'},body:{
+  zh:'<table><tr><th>指標</th><th>讀數（約數）</th><th>點解重要</th></tr><tr><td>下季收入指引</td><td>~$91B</td><td>增長仍然係雙位數年增；指引可信度高</td></tr><tr><td>預測市盈率</td><td>~21x</td><td>較 2024–25 年高峰大幅回落；估值風險已釋放一截</td></tr><tr><td>毛利率</td><td>~70% 水平</td><td>定價權嘅直接證據；留意每季有冇侵蝕</td></tr><tr><td>資產負債表</td><td>淨現金</td><td>高息環境下唔使捱貴息，仲可以回購</td></tr></table><p><b>核心判斷：</b>估值已由「信仰價」回歸「增長股合理價」。而家買 NVDA 買嘅係 <b>AI 資本開支週期嘅持續性</b>——只要 hyperscaler capex 唔崩，21 倍係合理偏平；一旦 capex 見頂回落，盈利預測同倍數會雙殺。</p>',
+  en:'<table><tr><th>Metric</th><th>Reading (approx.)</th><th>Why it matters</th></tr><tr><td>Next-qtr revenue guide</td><td>~$91B</td><td>Still double-digit annual growth; guidance credibility is high</td></tr><tr><td>Forward P/E</td><td>~21x</td><td>Well below the 2024–25 peak; a chunk of valuation risk already released</td></tr><tr><td>Gross margin</td><td>~70% zone</td><td>Direct evidence of pricing power; watch for quarterly erosion</td></tr><tr><td>Balance sheet</td><td>Net cash</td><td>No expensive debt in a high-rate world; funds buybacks</td></tr></table><p><b>Core judgment:</b> the multiple has come back from “faith pricing” to “reasonable growth-stock pricing.” Buying NVDA today is buying the <b>durability of the AI capex cycle</b> — if hyperscaler capex holds, 21x is fair-to-cheap; if capex peaks, estimates and the multiple get hit together.</p>'
+ }},
+ {ic:'📈',title:{zh:'技術面分析',en:'Technical Analysis'},body:{
+  zh:'<p><b>趨勢判讀：</b>中長期上升趨勢完好（價格處 52 週區間上半部、200 日均線上方），但 $212–216 一帶出現<b>疑似雙頂</b>爭論，短線動能轉弱。</p><div class="lv"><span class="sup">支持 $205（短期）</span><span class="sup">支持 $195–200（50 日均線區）</span><span class="sup">重要支持 $184–186（前平台）</span><span class="sup">支持 $164（52週低）</span><span class="res">阻力 $213–216</span><span class="res">阻力 $220</span><span class="res">阻力 $236.5（歷史高）</span></div><ul><li><b>形態：</b>$210 上落多次受阻，需要放量收市企穩 $216 以上先確認繼續上攻 $236。</li><li><b>回調深度指引：</b>健康回調通常見 50 日均線（$195–200）；跌穿 $184 就要懷疑中期結構轉壞。</li><li><b>相對強度：</b>對比納指 100 保持同步至輕微跑贏——龍頭地位未變。</li></ul><p class="mini">※ 以上水平為編製報告時嘅示例讀數，操作前請以最新圖表覆核。</p>',
+  en:'<p><b>Trend read:</b> the medium/long-term uptrend is intact (upper half of the 52-week range, above the 200-day MA), but a <b>possible double top</b> debate around $212–216 has sapped short-term momentum.</p><div class="lv"><span class="sup">Support $205 (near-term)</span><span class="sup">Support $195–200 (50-day MA zone)</span><span class="sup">Major support $184–186 (prior shelf)</span><span class="sup">Support $164 (52-wk low)</span><span class="res">Resistance $213–216</span><span class="res">Resistance $220</span><span class="res">Resistance $236.5 (all-time zone)</span></div><ul><li><b>Pattern:</b> repeated rejections near $210+; a high-volume close above $216 is needed to confirm a run at $236.</li><li><b>Pullback guide:</b> healthy dips tend to find the 50-day MA ($195–200); a break of $184 would question the medium-term structure.</li><li><b>Relative strength:</b> tracking to slightly beating the Nasdaq-100 — leadership intact.</li></ul><p class="mini">※ Levels are illustrative as of writing — verify on a live chart before acting.</p>'
+ }},
+ {ic:'🌐',title:{zh:'宏觀背景',en:'Macro Context'},body:{
+  zh:'<ul><li><b>利率：</b>聯邦基金利率 3.50–3.75%、通脹約 4.2%、聯儲局偏鷹——高利率壓成長股估值，係 NVDA 倍數壓縮嘅一大原因。利好位：佢係少數「而家就賺大錢」嘅 AI 股，抗息能力遠勝無盈利科技。</li><li><b>出口政策：</b>UAE 放寬係正面樣板；但對華管制隨時反覆，政策係雙刃劍。</li><li><b>AI 資本開支週期：</b>hyperscaler 每季 capex 指引係 NVDA 嘅「宏觀數據」。任何一間巨頭削 capex，成個板塊都會震。</li><li><b>供應鏈：</b>先進製程同 CoWoS 封裝產能依賴台積電——地緣風險集中喺台海。</li></ul>',
+  en:'<ul><li><b>Rates:</b> fed funds at 3.50–3.75%, inflation ~4.2%, a hawkish-leaning Fed — high rates compress growth multiples and explain much of NVDA\'s de-rating. Offset: it\'s one of the few AI names earning big money <i>now</i>, far more rate-resistant than profitless tech.</li><li><b>Export policy:</b> the UAE easing is a positive template, but China controls can swing either way — policy cuts both ways.</li><li><b>AI capex cycle:</b> hyperscaler quarterly capex guidance is NVDA\'s true “macro data.” One mega-cap cutting capex shakes the whole complex.</li><li><b>Supply chain:</b> leading-edge nodes and CoWoS packaging depend on TSMC — geopolitical risk concentrates in the Taiwan Strait.</li></ul>'
+ }},
+ {ic:'⚖️',title:{zh:'情境估值',en:'Scenario Valuation'},body:{
+  zh:'<div class="scen"><div class="sc bull"><h4>🐂 牛市情境</h4><ul><li>新平台順利爬坡、$91B 指引持續 beat</li><li>推理需求接力訓練需求，capex 週期延長</li><li>倍數修復至 25–28 倍</li></ul><p><b>含義：</b>示例目標區 $280–320。</p></div><div class="sc base"><h4>⚖️ 基本情境</h4><ul><li>維持約 21 倍，靠 EPS 增長推動股價</li><li>出口政策維持現狀，毛利率溫和回落</li></ul><p><b>含義：</b>12 個月示例目標區 $230–260。</p></div><div class="sc bear"><h4>🐻 熊市情境</h4><ul><li>hyperscaler capex 見頂、自研 ASIC 搶份額</li><li>倍數壓至 15–16 倍兼盈利下修</li></ul><p><b>含義：</b>示例下行區 $150–170（−25% 至 −30%）。</p></div></div>',
+  en:'<div class="scen"><div class="sc bull"><h4>🐂 Bull Case</h4><ul><li>Next platform ramps cleanly; $91B guides keep beating</li><li>Inference demand extends the capex cycle beyond training</li><li>Multiple recovers to 25–28x</li></ul><p><b>Implied:</b> illustrative target zone $280–320.</p></div><div class="sc base"><h4>⚖️ Base Case</h4><ul><li>Holds ~21x; EPS growth does the lifting</li><li>Export status quo; gross margin drifts modestly lower</li></ul><p><b>Implied:</b> 12-month illustrative zone $230–260.</p></div><div class="sc bear"><h4>🐻 Bear Case</h4><ul><li>Hyperscaler capex peaks; in-house ASICs take share</li><li>Multiple compresses to 15–16x with estimate cuts</li></ul><p><b>Implied:</b> illustrative downside zone $150–170 (−25% to −30%).</p></div></div>'
+ }},
+ {ic:'🎯',cls:'plan',title:{zh:'交易計劃（示例）',en:'Trade Plan (Illustrative)'},body:{
+  zh:'<p><b>現時信號：<span class="hl">持有</span></b>——趨勢向上但貼近阻力，現價追入風險回報唔靚；持貨者坐，冇貨者等以下兩個入場點。</p><table><tr><th>方案</th><th>入場</th><th>止蝕</th><th>目標</th><th>風險回報</th></tr><tr><td><b>A. 回調分段買</b>（首選）</td><td>$195–205 分兩注，平均約 $200</td><td>$183（跌穿前平台；風險約 8.5%）</td><td>T1 $236 ／ T2 $265</td><td>2.1R ／ 3.8R</td></tr><tr><td><b>B. 突破追勢</b></td><td>放量收市創新高，約 $238 入場</td><td>$219（風險約 8%）</td><td>T1 $265 ／ T2 $290</td><td>1.4R ／ 2.7R</td></tr></table><ul><li><b>止賺執行：</b>T1 沽三分一，餘下用 3×ATR 吊燈式移動止賺，畀利潤跑。</li><li><b>倉位紀律：</b>優質核心持股可佔組合 <b>5–8%</b>；單筆風險 ≤帳戶 1.5%。</li><li><b>長線持有者：</b>可以完全唔理短線計劃，改用「收市跌穿 200 日均線且均線轉向下」先減磅嘅制度式規則。</li><li><b>作廢條件：</b>任何一間大型雲廠明確下調 capex 指引、或業績毛利率意外大跌——計劃作廢。</li></ul>',
+  en:'<p><b>Current signal: <span class="hl">HOLD</span></b> — uptrend intact but pressing resistance; chasing here offers poor R:R. Holders sit tight; buyers wait for one of two entries.</p><table><tr><th>Setup</th><th>Entry</th><th>Stop-loss</th><th>Targets</th><th>R:R</th></tr><tr><td><b>A. Buy the dip</b> (preferred)</td><td>Two tranches $195–205, avg ~$200</td><td>$183 (below prior shelf; ~8.5% risk)</td><td>T1 $236 / T2 $265</td><td>2.1R / 3.8R</td></tr><tr><td><b>B. Breakout</b></td><td>High-volume close at new highs; enter ~$238</td><td>$219 (~8% risk)</td><td>T1 $265 / T2 $290</td><td>1.4R / 2.7R</td></tr></table><ul><li><b>Profit-taking:</b> sell 1/3 at T1, trail the rest with a 3×ATR chandelier stop — let winners run.</li><li><b>Sizing discipline:</b> a quality core holding can be <b>5–8% of the portfolio</b>; per-trade risk ≤1.5% of the account.</li><li><b>Long-term holders:</b> may ignore the short-term plans entirely and instead use a regime rule — trim only on a close below a declining 200-day MA.</li><li><b>Invalidation:</b> any major hyperscaler cutting capex guidance, or a surprise gross-margin drop at earnings, voids the plan.</li></ul>'
+ }},
+ {ic:'⚠️',title:{zh:'主要風險',en:'Key Risks'},body:{
+  zh:'<ol><li><b>客戶集中</b>——幾間 hyperscaler 貢獻大部分數據中心收入；佢哋嘅 capex 決定一切。</li><li><b>自研晶片競爭</b>——Google TPU、Amazon Trainium 等 ASIC 喺推理場景逐步搶份額。</li><li><b>出口管制反覆</b>——對華、對中東政策一夜可變。</li><li><b>台積電依賴</b>——先進封裝產能同台海地緣風險。</li><li><b>估值再壓縮</b>——通脹 4.2% 若迫使聯儲局再加息，成長股倍數繼續受壓。</li><li><b>AI 變現落地</b>——如果企業 AI 應用回報不似預期，capex 週期會提早見頂。</li></ol>',
+  en:'<ol><li><b>Customer concentration</b> — a handful of hyperscalers drive most data-center revenue; their capex decides everything.</li><li><b>Custom-silicon competition</b> — Google TPUs, Amazon Trainium and other ASICs are taking inference share.</li><li><b>Export-control whiplash</b> — China and Middle East policy can flip overnight.</li><li><b>TSMC dependence</b> — advanced packaging capacity and Taiwan Strait geopolitics.</li><li><b>Further multiple compression</b> — if 4.2% inflation forces more Fed hikes, growth multiples stay under pressure.</li><li><b>AI monetization</b> — if enterprise AI returns disappoint, the capex cycle peaks early.</li></ol>'
+ }},
+ {ic:'👀',title:{zh:'觀察清單',en:'Watch Items'},body:{
+  zh:'<ul class="checklist"><li>8 月下旬季度業績：收入 vs $91B 指引、毛利率、下季指引</li><li>四大雲廠每季 capex 指引（NVDA 嘅先行指標）</li><li>下一代平台出貨時間表同良率消息</li><li>美國對華／中東出口政策動向</li><li>10 年期美債息率——成長股估值嘅重力</li><li>7 月 28–29 FOMC 會議結果</li></ul>',
+  en:'<ul class="checklist"><li>Late-August earnings: revenue vs. the $91B guide, gross margin, next-quarter guidance</li><li>Quarterly capex guidance from the four big clouds (NVDA\'s leading indicator)</li><li>Next-platform shipment timeline and yield news</li><li>U.S. export policy toward China / Middle East</li><li>The 10-year Treasury yield — gravity for growth multiples</li><li>July 28–29 FOMC outcome</li></ul>'
+ }},
+ {ic:'🧾',title:{zh:'總結',en:'Bottom Line'},body:{
+  zh:'<p>NVDA 係<b>有真實盈利支撐嘅 AI 龍頭</b>，21 倍預測市盈率令估值風險大幅降低，但股價貼近歷史高位阻力，<b>唔值得高追</b>。策略清晰：持貨者用 200 日均線制度坐貨；想入場就等 $195–205 回調分段買（止蝕 $183）或者 $238 突破確認追入。倉位可以係核心級（5–8%），但同樣要守單筆風險上限。最大嘅胃口測試唔係公司，係你能唔能夠喺 capex 週期見頂嗰日果斷執行止蝕。</p>',
+  en:'<p>NVDA is the <b>AI leader with real earnings behind it</b>; at ~21x forward the valuation risk has been substantially wrung out — but pressing all-time-high resistance, it is <b>not worth chasing</b>. The strategy is clean: holders ride the 200-day-MA regime rule; buyers wait for the $195–205 dip (stop $183) or a confirmed breakout at $238. Position size can be core-level (5–8%), but the per-trade risk cap still applies. The real test isn\'t the company — it\'s whether you\'ll execute the stop the day the capex cycle peaks.</p>'
+ }}
+ ]
+},
+
+/* ============ QQQ ============ */
+{
+ id:'qqq', ticker:'QQQ', tv:'NASDAQ:QQQ', type:'etf',
+ name:{zh:'Invesco QQQ Trust（納指100 ETF）',en:'Invesco QQQ Trust (Nasdaq-100 ETF)'},
+ price:'$717.74', asOf:'2026-07-16', updated:'2026-07-17',
+ range:{zh:'52週範圍 $551.68 – $748.65；總開支比率 0.18%；股息率 0.45%',en:'52-wk range $551.68 – $748.65; expense ratio 0.18%; yield 0.45%'},
+ signal:'acc', risk:2,
+ tags:[{zh:'指數 ETF',en:'Index ETF'},{zh:'科技增長',en:'Tech growth'},{zh:'長線定投核心',en:'Long-term DCA core'}],
+ summary:{
+  zh:'納指 100 ETF：一注買晒美國大型科技增長。長線用月供定投＋200 日均線制度過濾；短線近歷史高位，等回調先加碼。',
+  en:'The Nasdaq-100 in one ticket. Long-term: dollar-cost average with a 200-day-MA regime filter. Short-term: near all-time highs — add on pullbacks, not at the top.'
+ },
+ sections:[
+ {ic:'🧭',title:{zh:'快速定位',en:'Quick Take'},body:{
+  zh:'<p>QQQ 追蹤納斯達克 100 指數——美國最大 100 間非金融上市公司，科技權重極高。佢係全球最活躍嘅 ETF 之一，<b>買 QQQ ＝一注買晒 AI／雲計算／消費科技巨頭</b>。</p><p>現價 $717.7，距 52 週高位 $748.65 約 4%，處於強勢上升趨勢。對大多數人嚟講，QQQ 呢類指數 ETF 應該係<b>組合嘅核心</b>，個股（例如本站分析嘅 NVDA、USAR）先係衛星。</p>',
+  en:'<p>QQQ tracks the Nasdaq-100 — the 100 largest non-financial companies on Nasdaq, heavily weighted to technology. One of the most actively traded ETFs in the world, <b>buying QQQ = buying the AI / cloud / consumer-tech giants in a single ticket</b>.</p><p>At $717.7 it sits about 4% below its 52-week high of $748.65, in a strong uptrend. For most investors an index ETF like QQQ should be the <b>core of the portfolio</b>, with single stocks (like NVDA or USAR analysed on this site) as satellites.</p>'
+ }},
+ {ic:'📊',title:{zh:'基本面分析（ETF 角度）',en:'Fundamental Analysis (ETF Lens)'},body:{
+  zh:'<p>分析 ETF 唔係睇一間公司，而係睇<b>成本、結構、成份股質素</b>：</p><table><tr><th>項目</th><th>讀數</th><th>評語</th></tr><tr><td>總開支比率</td><td>0.18%</td><td>低；長線複利侵蝕細</td></tr><tr><td>股息率</td><td>0.45%</td><td>增長型 ETF，唔係收息工具</td></tr><tr><td>流動性</td><td>極高</td><td>買賣差價極窄，期權市場深</td></tr><tr><td>集中度</td><td>頭十大權重佔比高</td><td>實際上係一注重倉 mega-cap tech——優點亦係風險</td></tr><tr><td>估值</td><td>隨成份股（NVDA 約 21 倍等）</td><td>指數層面估值較 2025 年高峰回落，但仍高於歷史中位</td></tr></table><p><b>盈利支柱：</b>指數盈利增長目前由 AI 資本開支週期驅動——呢個係 QQQ 同 NVDA 共用嘅單一引擎，亦係最大嘅集中風險。</p>',
+  en:'<p>Analysing an ETF is not about one company — it\'s about <b>cost, structure and constituent quality</b>:</p><table><tr><th>Item</th><th>Reading</th><th>Comment</th></tr><tr><td>Expense ratio</td><td>0.18%</td><td>Low; minimal long-run compounding drag</td></tr><tr><td>Dividend yield</td><td>0.45%</td><td>A growth vehicle, not an income one</td></tr><tr><td>Liquidity</td><td>Extremely high</td><td>Razor-thin spreads, deep options market</td></tr><tr><td>Concentration</td><td>Top-10 weight is high</td><td>Effectively a concentrated mega-cap tech bet — the feature and the risk</td></tr><tr><td>Valuation</td><td>Follows constituents (NVDA ~21x etc.)</td><td>Index-level multiples off the 2025 peak but still above historical medians</td></tr></table><p><b>Earnings pillar:</b> index earnings growth is currently driven by the AI capex cycle — the single engine QQQ shares with NVDA, and its biggest concentration risk.</p>'
+ }},
+ {ic:'📈',title:{zh:'技術面分析',en:'Technical Analysis'},body:{
+  zh:'<p><b>趨勢判讀：</b>強勢上升趨勢——價格企穩喺 50 日同 200 日均線之上，一年間由 $551 升至逼近 $749 歷史高位區。</p><div class="lv"><span class="sup">支持 $690–700（50 日均線區）</span><span class="sup">支持 $660（前突破平台）</span><span class="sup">重要支持 $600–620（200 日均線區）</span><span class="res">阻力 $748.65（歷史高位區）</span></div><ul><li><b>市寬警號：</b>如果指數創新高但多數成份股跌（升市靠幾隻 mega-cap 撐），係轉弱先兆——留意等權重版本（QQQE）有冇背馳。</li><li><b>制度過濾（regime filter）：</b>收市價企喺 200 日均線之上＝順風做多環境；收市跌穿且均線轉向下＝防守模式。呢條簡單規則歷史上避開大部分深熊。</li></ul><p class="mini">※ 以上水平為編製報告時嘅示例讀數，操作前請以最新圖表覆核。</p>',
+  en:'<p><b>Trend read:</b> strong uptrend — price above both the 50-day and 200-day MAs, up from $551 to near the $749 all-time zone within a year.</p><div class="lv"><span class="sup">Support $690–700 (50-day MA zone)</span><span class="sup">Support $660 (prior breakout shelf)</span><span class="sup">Major support $600–620 (200-day MA zone)</span><span class="res">Resistance $748.65 (all-time-high zone)</span></div><ul><li><b>Breadth warning:</b> if the index makes new highs while most constituents fall (a few mega-caps doing the lifting), that\'s an early weakening signal — watch the equal-weight version (QQQE) for divergence.</li><li><b>Regime filter:</b> closes above the 200-day MA = risk-on tailwind; a close below a downward-sloping 200-day = defensive mode. This simple rule has historically sidestepped most deep bear markets.</li></ul><p class="mini">※ Levels are illustrative as of writing — verify on a live chart before acting.</p>'
+ }},
+ {ic:'🌐',title:{zh:'宏觀背景',en:'Macro Context'},body:{
+  zh:'<ul><li><b>利率係頭號變數：</b>通脹 4.2%、聯儲局偏鷹、7 月尾議息——如果被迫再加息，長久期成長股（即 QQQ 嘅主體）首當其衝。</li><li><b>AI 盈利 vs 利率拉鋸：</b>2026 年上半年嘅升市靠 AI 盈利兌現頂住高利率。呢場拉鋸邊面贏，決定 QQQ 下半年方向。</li><li><b>地緣：</b>中東緊張推高油價→通脹風險→利率風險，傳導鏈直接。</li><li><b>歷史規律：</b>QQQ 喺「增長↑通脹↓」環境表現最好；喺「滯脹」環境（而家有少少影）表現最差。詳見宏觀頁嘅投資時鐘。</li></ul>',
+  en:'<ul><li><b>Rates are variable #1:</b> 4.2% inflation, a hawkish Fed, an end-July FOMC — if forced to hike again, long-duration growth (i.e., the body of QQQ) takes the first punch.</li><li><b>AI earnings vs. rates tug-of-war:</b> H1-2026\'s rally was AI earnings outrunning high rates. Whoever wins that tug-of-war sets QQQ\'s H2 direction.</li><li><b>Geopolitics:</b> Middle East tension → higher oil → inflation risk → rate risk. The transmission chain is direct.</li><li><b>Historical pattern:</b> QQQ does best in “growth up / inflation down” regimes and worst in stagflation — of which there\'s currently a whiff. See the investment clock on the Macro page.</li></ul>'
+ }},
+ {ic:'🎯',cls:'plan',title:{zh:'交易計劃（示例）',en:'Trade Plan (Illustrative)'},body:{
+  zh:'<p><b>現時信號：<span class="hl">分段吸納（長線）／觀望（短線加碼）</span></b>——趨勢向上，但貼近歷史高位唔係最佳加碼點。</p><table><tr><th>策略</th><th>做法</th><th>止蝕／防守</th></tr><tr><td><b>A. 月供定投</b>（大多數人嘅正解）</td><td>每月固定金額買入，唔理短期波動，跌市自動買多咗股數</td><td>唔設個別止蝕；用「200 日均線制度」：收市跌穿且均線向下 → 暫停新投入或減半倉，重上先恢復</td></tr><td colspan="3"></td><tr><td><b>B. 戰術加碼</b></td><td>回調至 $690–700（50 日均線區）加一注；深調至 $660 再加一注</td><td>戰術注收市跌穿 $655 離場（風險約 5%）；目標重返 $748 及之上（約 1.9R+）</td></tr></table><ul><li><b>止賺思路：</b>指數 ETF 長線注一般唔設固定止賺，用制度規則決定攞唔攞利潤；戰術注可以喺創新高後用 20 日低位移動止賺。</li><li><b>倉位角色：</b>QQQ 呢類核心 ETF 可佔組合 <b>20–40%</b>（視乎年齡同風險承受力），係個股倉嘅基準錨。</li></ul>',
+  en:'<p><b>Current signal: <span class="hl">ACCUMULATE (long-term) / WATCH (tactical adds)</span></b> — uptrend intact, but pressing all-time highs is not the best add point.</p><table><tr><th>Strategy</th><th>Execution</th><th>Stop / defense</th></tr><tr><td><b>A. Dollar-cost averaging</b> (the right answer for most)</td><td>Fixed monthly amount, ignore short-term noise; dips buy you more shares automatically</td><td>No per-trade stop; use the <b>200-day-MA regime rule</b> — close below a declining 200-day → pause new buys or halve exposure; resume above</td></tr><td colspan="3"></td><tr><td><b>B. Tactical add</b></td><td>Add a tranche on a dip to $690–700 (50-day zone); add again at $660 on a deep pullback</td><td>Tactical tranche exits on a close below $655 (~5% risk); target back above $748 (~1.9R+)</td></tr></table><ul><li><b>Profit-taking:</b> long-term index tranches usually carry no fixed target — the regime rule decides; tactical tranches can trail a 20-day-low stop after new highs.</li><li><b>Portfolio role:</b> a core ETF like QQQ can be <b>20–40%</b> of a portfolio (age and risk tolerance permitting) — the anchor your single-stock bets are measured against.</li></ul>'
+ }},
+ {ic:'⚠️',title:{zh:'主要風險',en:'Key Risks'},body:{
+  zh:'<ol><li><b>集中度</b>——頭十大成份股主導表現；AI 交易擠擁，一齊上亦會一齊落。</li><li><b>利率衝擊</b>——通脹反覆令聯儲局再收緊，成長股估值受壓。</li><li><b>AI 資本開支見頂</b>——成份股盈利引擎單一化。</li><li><b>估值唔平</b>——高於歷史中位數嘅倍數令長期回報預期下降。</li><li><b>科技監管／反壟斷</b>——針對 mega-cap 嘅政策風險長期存在。</li></ol>',
+  en:'<ol><li><b>Concentration</b> — the top 10 holdings dominate performance; the AI trade is crowded, and what rises together falls together.</li><li><b>Rate shock</b> — sticky inflation forcing further Fed tightening compresses growth multiples.</li><li><b>AI capex peak</b> — a single earnings engine across the constituents.</li><li><b>Valuation isn\'t cheap</b> — above-median multiples lower long-run expected returns.</li><li><b>Tech regulation / antitrust</b> — a standing policy risk for mega-caps.</li></ol>'
+ }},
+ {ic:'🧾',title:{zh:'總結',en:'Bottom Line'},body:{
+  zh:'<p>QQQ 係<b>用最低成本持有美國科技增長引擎</b>嘅工具，適合做組合核心。而家嘅正確動作好簡單：已經月供嘅，繼續供，唔使聰明；想加碼嘅，等 $690–700 或 $660 回調位，唔好喺歷史高位追；所有人都用 200 日均線制度做最後防線。記住：<b>指數 ETF 嘅超額回報來自紀律，唔係擇時天才。</b></p>',
+  en:'<p>QQQ is the <b>lowest-cost way to own America\'s tech growth engine</b> and belongs at the core of a portfolio. The right moves now are simple: if you\'re dollar-cost averaging, keep going — don\'t get clever; if adding, wait for the $690–700 or $660 pullback zones instead of chasing all-time highs; and let the 200-day-MA regime rule be everyone\'s last line of defense. Remember: <b>excess returns from index ETFs come from discipline, not timing genius.</b></p>'
+ }}
+ ]
+},
+
+/* ============ GOLD ============ */
+{
+ id:'gold', ticker:'GOLD', tv:'TVC:GOLD', type:'comm',
+ name:{zh:'黃金（現貨／黃金 ETF）',en:'Gold (Spot / Gold ETFs)'},
+ price:'$3,998/oz', asOf:'2026-07-16', updated:'2026-07-17',
+ range:{zh:'月跌約 6%；年升約 20%；正測試 $4,000 關口',en:'Down ~6% on the month; up ~20% y/y; testing the $4,000 mark'},
+ signal:'watch', risk:3,
+ tags:[{zh:'貴金屬',en:'Precious metals'},{zh:'避險／對沖',en:'Hedge / haven'},{zh:'組合配置 5–10%',en:'5–10% allocation'}],
+ summary:{
+  zh:'金價年升兩成後回調測試 $4,000 心理關。實質利率上升係短期逆風，央行買盤係長期底。等企穩支持區先分段吸納，做組合 5–10% 對沖。',
+  en:'After a 20% annual gain, gold is correcting into the $4,000 psychological level. Rising real rates are the near-term headwind; central-bank buying is the long-term floor. Scale in only after support holds — as a 5–10% portfolio hedge.'
+ },
+ sections:[
+ {ic:'🧭',title:{zh:'快速定位',en:'Quick Take'},body:{
+  zh:'<p>黃金係<b>組合保險</b>，唔係增長資產——冇現金流，回報全靠宏觀環境。現貨金 7 月 16 日報約 <b>$3,998/oz</b>，單日跌 1.5%，逼近 2025 年 11 月以嚟低位；月跌約 6%，但按年仍升近 20%。</p><p>回調主因：中東緊張推高油價 → 通脹憂慮 → 市場預期<b>利率高企更耐</b> → 實質利率上升壓金價。呢份報告以現貨金做分析主體，執行工具見「產品選擇」一節。</p>',
+  en:'<p>Gold is <b>portfolio insurance</b>, not a growth asset — it has no cash flow, so returns are entirely macro-driven. Spot traded near <b>$3,998/oz</b> on July 16, down 1.5% on the day and approaching its lowest level since November 2025; off ~6% for the month yet still up ~20% year-on-year.</p><p>The correction\'s driver: Middle East tension → higher oil → inflation worry → markets pricing <b>rates staying higher for longer</b> → rising real rates pressing on gold. This report analyses spot; execution vehicles are covered under “Instrument Choice.”</p>'
+ }},
+ {ic:'📊',title:{zh:'基本面分析（供需與持倉）',en:'Fundamental Analysis (Supply, Demand, Positioning)'},body:{
+  zh:'<table><tr><th>驅動因素</th><th>現況</th><th>方向</th></tr><tr><td>實質利率</td><td>名義利率 3.5–3.75% 兼或需再加；通脹 4.2%</td><td>短期偏淡（利率預期上移）</td></tr><tr><td>央行買金</td><td>去美元化趨勢下持續淨買入</td><td>長期利好（結構性買盤）</td></tr><tr><td>美元</td><td>高息支撐美元 → 壓金價</td><td>偏淡</td></tr><tr><td>地緣風險溢價</td><td>中東緊張反覆</td><td>間歇性利好</td></tr><tr><td>ETF／投機持倉</td><td>年升 20% 後獲利回吐</td><td>短期偏淡（去槓桿）</td></tr></table><p><b>核心矛盾：</b>短線係「實質利率 vs 金價」嘅經典角力；長線係央行儲備多元化提供結構性承接。呢個組合通常出現嘅形態係——<b>深度回調但難以熊市</b>。</p>',
+  en:'<table><tr><th>Driver</th><th>Status</th><th>Direction</th></tr><tr><td>Real rates</td><td>Nominal 3.5–3.75% with hike risk; inflation 4.2%</td><td>Near-term bearish (rate expectations rising)</td></tr><tr><td>Central-bank buying</td><td>Persistent net purchases amid de-dollarization</td><td>Long-term bullish (structural bid)</td></tr><tr><td>US dollar</td><td>High rates support the dollar → weighs on gold</td><td>Bearish</td></tr><tr><td>Geopolitical premium</td><td>Recurring Middle East flare-ups</td><td>Episodically bullish</td></tr><tr><td>ETF / spec positioning</td><td>Profit-taking after a 20% annual run</td><td>Near-term bearish (de-leveraging)</td></tr></table><p><b>The core tension:</b> short-term it\'s the classic real-rates-versus-gold arm-wrestle; long-term, central-bank reserve diversification provides a structural bid. That mix usually produces <b>deep corrections without a true bear market</b>.</p>'
+ }},
+ {ic:'📈',title:{zh:'技術面分析',en:'Technical Analysis'},body:{
+  zh:'<p><b>趨勢判讀：</b>長期上升趨勢中嘅<b>中級回調</b>——月線圖仍然向上，日線圖已跌穿 50 日均線，正測試關鍵心理＋結構支持區。</p><div class="lv"><span class="sup">支持 $3,950–4,000（2025年11月低位區＋心理關）</span><span class="sup">重要支持 $3,880</span><span class="sup">深度支持 $3,700</span><span class="res">阻力 $4,150（月初回落起點）</span><span class="res">阻力 $4,350</span><span class="res">阻力 $4,500（前高區）</span></div><ul><li><b>動能：</b>月跌 6% 後日線 RSI 接近超賣——反彈條件累積中，但<span class="hl">超賣唔等於見底</span>，要等價格行為確認。</li><li><b>確認訊號：</b>喺 $3,950–4,000 區間出現日線長下影＋收復 $4,050，先算企穩；收市失守 $3,950 就要畀佢跌到 $3,880 甚至 $3,700 再算。</li></ul><p class="mini">※ 以上水平為編製報告時嘅示例讀數，操作前請以最新圖表覆核。</p>',
+  en:'<p><b>Trend read:</b> an <b>intermediate correction within a long-term uptrend</b> — the monthly chart still points up, but the daily has lost the 50-day MA and is testing a key psychological + structural support zone.</p><div class="lv"><span class="sup">Support $3,950–4,000 (Nov-2025 low zone + round number)</span><span class="sup">Major support $3,880</span><span class="sup">Deep support $3,700</span><span class="res">Resistance $4,150 (where July\'s slide began)</span><span class="res">Resistance $4,350</span><span class="res">Resistance $4,500 (prior high zone)</span></div><ul><li><b>Momentum:</b> after a 6% monthly drop the daily RSI is near oversold — bounce conditions are building, but <span class="hl">oversold is not the same as bottomed</span>; wait for price confirmation.</li><li><b>Confirmation:</b> a long lower wick in the $3,950–4,000 zone plus a reclaim of $4,050 = stabilization; a close below $3,950 opens $3,880 and possibly $3,700.</li></ul><p class="mini">※ Levels are illustrative as of writing — verify on a live chart before acting.</p>'
+ }},
+ {ic:'🧰',title:{zh:'產品選擇',en:'Instrument Choice'},body:{
+  zh:'<table><tr><th>工具</th><th>例子</th><th>適合</th><th>注意</th></tr><tr><td>美股黃金 ETF</td><td>GLD（開支 0.40%）／IAU（0.25%）</td><td>一般投資者</td><td>追蹤現貨扣費用；GLD 價 ≈ 現貨 ÷ 10.8</td></tr><tr><td>港股黃金 ETF</td><td>SPDR 金 ETF（2840.HK）</td><td>港元帳戶投資者</td><td>同 GLD 同源，留意港元交易時段流動性</td></tr><tr><td>金礦股 ETF</td><td>GDX</td><td>想要槓桿 beta 嘅進取者</td><td>波動約為金價 2–3 倍，兼有營運風險</td></tr><tr><td>實金</td><td>金條／金幣</td><td>極長線／實物偏好</td><td>買賣差價闊、有保管成本</td></tr></table>',
+  en:'<table><tr><th>Vehicle</th><th>Examples</th><th>Best for</th><th>Notes</th></tr><tr><td>US-listed gold ETFs</td><td>GLD (0.40% fee) / IAU (0.25%)</td><td>Most investors</td><td>Tracks spot minus fees; GLD price ≈ spot ÷ 10.8</td></tr><tr><td>HK-listed gold ETF</td><td>SPDR Gold Trust (2840.HK)</td><td>HKD-account investors</td><td>Same trust as GLD; mind HK-session liquidity</td></tr><tr><td>Gold-miner ETFs</td><td>GDX</td><td>Aggressive investors wanting leveraged beta</td><td>Roughly 2–3× gold\'s volatility plus operating risk</td></tr><tr><td>Physical</td><td>Bars / coins</td><td>Very long horizon / physical preference</td><td>Wide spreads, storage costs</td></tr></table>'
+ }},
+ {ic:'⚖️',title:{zh:'情境推演',en:'Scenarios'},body:{
+  zh:'<div class="scen"><div class="sc bull"><h4>🐂 牛市情境</h4><ul><li>通脹頑固但聯儲局唔敢加太多 → 實質利率回落</li><li>地緣升級＋央行加速買金</li></ul><p><b>含義：</b>重返 $4,350–4,500，甚至挑戰新高。</p></div><div class="sc base"><h4>⚖️ 基本情境</h4><ul><li>利率高位橫行，金價喺 $3,900–4,350 大區間消化</li><li>央行買盤限制下行深度</li></ul><p><b>含義：</b>區間市；分段吸納區喺區間下沿先有值博率。</p></div><div class="sc bear"><h4>🐻 熊市情境</h4><ul><li>聯儲局連續加息、美元強勢、通脹快速回落</li><li>實質利率大升</li></ul><p><b>含義：</b>失守 $3,880 後試 $3,700 甚至 $3,500（−9% 至 −12%）。</p></div></div>',
+  en:'<div class="scen"><div class="sc bull"><h4>🐂 Bull Case</h4><ul><li>Inflation stays sticky but the Fed can\'t hike much → real rates fall</li><li>Geopolitical escalation + accelerating central-bank purchases</li></ul><p><b>Implied:</b> back to $4,350–4,500, possibly new highs.</p></div><div class="sc base"><h4>⚖️ Base Case</h4><ul><li>Rates plateau; gold digests in a broad $3,900–4,350 range</li><li>Central-bank bid limits the downside</li></ul><p><b>Implied:</b> range trade; scale-ins only earn their risk near the range lows.</p></div><div class="sc bear"><h4>🐻 Bear Case</h4><ul><li>Serial Fed hikes, strong dollar, inflation falls fast</li><li>Real rates surge</li></ul><p><b>Implied:</b> losing $3,880 opens $3,700 and possibly $3,500 (−9% to −12%).</p></div></div>'
+ }},
+ {ic:'🎯',cls:'plan',title:{zh:'交易計劃（示例）',en:'Trade Plan (Illustrative)'},body:{
+  zh:'<p><b>現時信號：<span class="hl">觀望，準備分段吸納</span></b>——刀仲跌緊，等企穩訊號先出手。</p><table><tr><th>方案</th><th>入場</th><th>止蝕</th><th>目標</th><th>風險回報</th></tr><tr><td><b>A. 支持區吸納</b>（以現貨價計）</td><td>$3,950–4,000 出現長下影＋收復 $4,050 後，分兩注入場（均價約 $4,020）</td><td>收市跌穿 $3,880（風險約 3.5%）</td><td>T1 $4,150 ／ T2 $4,350 ／ T3 $4,500</td><td>0.9R ／ 2.4R ／ 3.4R</td></tr><tr><td><b>B. 深度回調撈</b></td><td>如果直接殺到 $3,700 支持（恐慌市）</td><td>收市跌穿 $3,580</td><td>T1 $3,950 ／ T2 $4,150</td><td>2.1R ／ 3.75R</td></tr></table><ul><li><b>換算：</b>用 GLD 執行時，將現貨水平 ÷10.8（例：現貨 $4,000 ≈ GLD $370）；2840.HK 同理按港元滙價換算。</li><li><b>止賺執行：</b>T1 只獲利三分一（第一目標 R:R 唔高），主要利潤預期喺 T2／T3；用週線收市價守長線倉。</li><li><b>倉位角色：</b>黃金做<b>組合 5–10% 對沖</b>，唔係主菜。買夠對沖比例後，唔好因為升市 FOMO 加注。</li></ul>',
+  en:'<p><b>Current signal: <span class="hl">WATCH — preparing to accumulate</span></b> — the knife is still falling; act only on a stabilization signal.</p><table><tr><th>Setup</th><th>Entry</th><th>Stop-loss</th><th>Targets</th><th>R:R</th></tr><tr><td><b>A. Support-zone scale-in</b> (spot terms)</td><td>After a long lower wick in $3,950–4,000 plus a reclaim of $4,050, two tranches (avg ~$4,020)</td><td>Close below $3,880 (~3.5% risk)</td><td>T1 $4,150 / T2 $4,350 / T3 $4,500</td><td>0.9R / 2.4R / 3.4R</td></tr><tr><td><b>B. Deep-pullback bid</b></td><td>If panic drives straight to $3,700 support</td><td>Close below $3,580</td><td>T1 $3,950 / T2 $4,150</td><td>2.1R / 3.75R</td></tr></table><ul><li><b>Conversion:</b> executing via GLD, divide spot levels by 10.8 (e.g., spot $4,000 ≈ GLD $370); same idea for 2840.HK with FX.</li><li><b>Profit-taking:</b> take only 1/3 at T1 (first target\'s R:R is thin); the real payoff is T2/T3. Manage long-term tranches on weekly closes.</li><li><b>Portfolio role:</b> gold is a <b>5–10% hedge</b>, not the main course. Once the hedge ratio is filled, don\'t FOMO-add into rallies.</li></ul>'
+ }},
+ {ic:'⚠️',title:{zh:'主要風險',en:'Key Risks'},body:{
+  zh:'<ol><li><b>利率風險</b>——聯儲局 7 月 28–29 或之後再加息，實質利率上升直接壓金價。</li><li><b>美元強勢</b>——高息差支撐美元，金價承壓。</li><li><b>持倉擠擁後遺症</b>——年升 20% 吸引嘅投機盤平倉時，回調會放大。</li><li><b>地緣降溫</b>——中東局勢緩和會抽走風險溢價。</li><li><b>機會成本</b>——高息環境下持有零息資產，每年輸緊 3.5%+ 畀貨幣基金。</li></ol>',
+  en:'<ol><li><b>Rate risk</b> — a Fed hike on July 28–29 or later lifts real rates and directly pressures gold.</li><li><b>Dollar strength</b> — wide rate differentials support the dollar at gold\'s expense.</li><li><b>Crowded-positioning hangover</b> — spec longs built during the 20% run amplify corrections as they unwind.</li><li><b>Geopolitical cooling</b> — a Middle East de-escalation drains the risk premium.</li><li><b>Opportunity cost</b> — holding a zero-yield asset while money-market funds pay 3.5%+.</li></ol>'
+ }},
+ {ic:'🧾',title:{zh:'總結',en:'Bottom Line'},body:{
+  zh:'<p>黃金嘅角色係<b>對沖通脹意外、貨幣貶值同地緣風險</b>，唔係追求超額回報。而家嘅局面係短期逆風（實質利率）撞上長期順風（央行買盤）——正確動作係<b>等 $3,950–4,000 區企穩，分段建立或補足組合 5–10% 嘅對沖倉</b>，止蝕守 $3,880。唔好用槓桿炒金，亦唔好因為佢「今年升咗兩成」先想起要買。</p>',
+  en:'<p>Gold\'s job is to <b>hedge inflation surprises, currency debasement and geopolitical risk</b> — not to chase excess returns. Today\'s setup pits a near-term headwind (real rates) against a long-term tailwind (central-bank buying). The right move: <b>wait for the $3,950–4,000 zone to stabilize, then scale into (or top up) a 5–10% portfolio hedge</b>, stop at $3,880. Don\'t trade gold on leverage, and don\'t discover it only because it\'s up 20% this year.</p>'
+ }}
+ ]
+}
+];
+
+/* ---------------- Static pages (bilingual HTML) ---------------- */
+var PAGES={
+
+system:{
+zh:'<h1>📐 交易系統：三重過濾買賣信號</h1><p class="sub">一套規則行先、情緒行後嘅系統。目標唔係每次都啱，而係<b>啱嘅時候贏多啲、錯嘅時候輸少啲</b>。</p>'
++'<div class="panel" style="margin-top:18px"><h3>核心哲學：三個「先」</h3><ul><li><b>先趨勢</b>——只喺大方向順風時做多。逆勢撈底係大部分虧損嘅來源。</li><li><b>先風險</b>——落單前先知道止蝕位喺邊、輸幾多。唔知輸幾多，就唔好諗贏幾多。</li><li><b>先計劃</b>——入場、止蝕、止賺、倉位四樣寫低晒先按掣。臨場改計劃＝冇計劃。</li></ul></div>'
++'<h2><span class="ic">🧱</span>第一重：趨勢過濾（可唔可以買？）</h2><div class="grid g3"><div class="card"><div class="ic">📈</div><h3>200 日均線</h3><p>收市價企喺 200 日均線之上 → 做多環境；之下 → 只觀望或防守。呢條係最重要嘅一條規則。</p></div><div class="card"><div class="ic">🔀</div><h3>均線多頭排列</h3><p>50 日均線企喺 200 日之上（黃金交叉後結構），且兩條均線向上 → 趨勢健康。</p></div><div class="card"><div class="ic">🏔️</div><h3>高低點結構</h3><p>圖表上高點越嚟越高、低點越嚟越高（HH-HL）→ 上升結構完好。跌穿前低即結構受損。</p></div></div>'
++'<h2><span class="ic">⚡</span>第二重：動能確認（夠唔夠力？）</h2><div class="twrap"><table class="data"><tr><th>指標</th><th>確認做多</th><th>警告訊號</th></tr><tr><td><b>RSI（14）</b></td><td>企穩 50 之上；回調時喺 40–50 獲支持</td><td>價創新高但 RSI 冇（頂背馳）</td></tr><tr><td><b>MACD</b></td><td>MACD 線企喺訊號線之上、柱狀圖擴張</td><td>高位死叉、柱狀圖持續收縮</td></tr><tr><td><b>成交量</b></td><td>突破日成交量明顯放大（1.5 倍以上均量）</td><td>升市縮量＝跟風不足</td></tr><tr><td><b>相對強度</b></td><td>跑贏大市（例如 SPY／QQQ）</td><td>大市升佢唔升＝資金唔喺度</td></tr></table></div>'
++'<h2><span class="ic">🎯</span>第三重：入場觸發（幾時買？）</h2><div class="grid g2"><div class="card"><h3>A. 突破入場（右側）</h3><p>價格<b>放量收市突破</b>明確阻力位／前高。優點：訊號清晰、即刻有動能；缺點：入場價較差、易中假突破。止蝕放突破位之下。</p></div><div class="card"><h3>B. 回調入場（順勢左側）</h3><p>上升趨勢中回調至 <b>50 日均線區或前突破平台</b>，出現止跌訊號（長下影、內包日）後分段入場。優點：入場價靚、止蝕近；缺點：可能等唔到。</p></div></div>'
++'<h2><span class="ic">🛑</span>止蝕規則（保命嘅一欄）</h2><div class="twrap"><table class="data"><tr><th>方法</th><th>做法</th><th>適用</th></tr><tr><td><b>技術止蝕</b></td><td>放喺關鍵支持位／突破平台<b>之下少少</b>（畀雜訊空間）</td><td>首選；同市場結構掛鈎</td></tr><tr><td><b>ATR 止蝕</b></td><td>入場價 − 2×ATR(14)。波動大嘅股自動畀多啲空間</td><td>波動股、冇明顯結構時</td></tr><tr><td><b>資金止蝕</b></td><td>單筆交易最多輸<b>帳戶 1–2%</b>——用嚟計倉位，唔係計價位</td><td>永遠同上面兩樣一齊用</td></tr></table></div><div class="panel" style="margin-top:12px"><b>鐵律：</b>止蝕係<b>落單嗰刻已經決定</b>嘅嘢，之後只可以向有利方向移（保護利潤），永遠唔可以向不利方向搬。跌到止蝕位＝執行，冇「等佢返家鄉」呢回事。</div>'
++'<h2><span class="ic">💰</span>止賺規則（畀利潤跑，但要有規矩）</h2><div class="grid g3"><div class="card"><h3>R 倍數分批</h3><p>用「1R ＝入場價−止蝕價」做單位：到 2R 沽三分一、3R 再沽三分一，餘下畀佢跑。確保贏嘅時候贏得夠。</p></div><div class="card"><h3>移動止賺</h3><p>吊燈式：最高價 − 3×ATR；或跌穿 20 日低位離場。趨勢唔完，唔主動落車。</p></div><div class="card"><h3>訊號止賺</h3><p>出現賣出訊號（見下表）就算未到目標都減磅——市場話你知幾時走，唔係目標價話你知。</p></div></div>'
++'<h2><span class="ic">🔻</span>賣出／減持信號</h2><div class="twrap"><table class="data"><tr><th>訊號</th><th>內容</th><th>動作</th></tr><tr><td>跌穿止蝕位</td><td>收市價觸及預設止蝕</td><td><b>無條件全部離場</b></td></tr><tr><td>結構破壞</td><td>收市跌穿 200 日均線且均線轉向下</td><td>減一半或以上</td></tr><tr><td>頂背馳＋放量滯漲</td><td>價新高、RSI/MACD 唔新高，兼高位放量唔升</td><td>沽三分一至一半</td></tr><tr><td>基本面變壞</td><td>入場理由（thesis）被推翻：盈利警告、大幅攤薄、政策轉向</td><td>重新評估，通常直接離場</td></tr><tr><td>到達目標</td><td>觸及 2R／3R 或情境估值上沿</td><td>按分批規則獲利</td></tr></table></div>'
++'<h2><span class="ic">⚖️</span>倉位計算（成個系統嘅膽）</h2><div class="formula">股數 ＝（帳戶資金 × 單筆風險％）÷（入場價 − 止蝕價）</div><p>例：帳戶 $100,000、風險 1%（＝$1,000）、入場 $200、止蝕 $183 → 每股風險 $17 → 股數 ＝ 1,000 ÷ 17 ≈ <b>58 股</b>（注碼約 $11,600，佔帳戶 11.6%）。</p><p>倉位由<b>止蝕距離</b>決定，唔係由「睇好程度」決定。止蝕近可以買多啲，止蝕遠自動買少啲——風險恆定。用「計算工具」頁自動計。</p>'
++'<h2><span class="ic">📋</span>交易紀律清單（每次落單前過一次）</h2><div class="panel"><ul class="checklist"><li>大市（QQQ/SPY）處於 200 日均線之上？</li><li>個股三重過濾全部通過？</li><li>入場、止蝕、止賺三個價已寫低？</li><li>風險回報比 ≥ 2R？（唔夠 2R 唔開新倉）</li><li>倉位按公式計，單筆風險 ≤ 帳戶 1–2%？</li><li>同類主題（例如 AI）總敞口未超上限？</li><li>三日內有冇業績／議息等二元事件？（有就縮倉或等）</li><li>呢單係計劃內，定係 FOMO？</li><li>輸咗呢筆，會唔會影響生活或者情緒？</li><li>止蝕單已經落定（唔係「心裡有數」）？</li></ul></div>',
+en:'<h1>📐 Trading System: Triple-Filter Signals</h1><p class="sub">Rules first, emotions second. The goal isn\'t to be right every time — it\'s to <b>win big when right and lose small when wrong</b>.</p>'
++'<div class="panel" style="margin-top:18px"><h3>Core philosophy: three “firsts”</h3><ul><li><b>Trend first</b> — only go long with the wind at your back. Counter-trend bottom-fishing is where most losses live.</li><li><b>Risk first</b> — know the stop and the loss amount before the order. If you don\'t know what you can lose, don\'t think about what you can win.</li><li><b>Plan first</b> — entry, stop, target and size all written down before the button. Changing the plan mid-trade = having no plan.</li></ul></div>'
++'<h2><span class="ic">🧱</span>Filter 1: Trend (may I buy at all?)</h2><div class="grid g3"><div class="card"><div class="ic">📈</div><h3>200-day MA</h3><p>Close above the 200-day → long environment; below → watch or defend only. The single most important rule.</p></div><div class="card"><div class="ic">🔀</div><h3>Bullish MA stack</h3><p>50-day above 200-day (post-golden-cross structure) with both rising → healthy trend.</p></div><div class="card"><div class="ic">🏔️</div><h3>Swing structure</h3><p>Higher highs and higher lows (HH-HL) → uptrend intact. A break of the prior swing low damages the structure.</p></div></div>'
++'<h2><span class="ic">⚡</span>Filter 2: Momentum (is there fuel?)</h2><div class="twrap"><table class="data"><tr><th>Indicator</th><th>Long confirmation</th><th>Warning sign</th></tr><tr><td><b>RSI (14)</b></td><td>Holding above 50; pullbacks supported at 40–50</td><td>Price makes new highs, RSI doesn\'t (bearish divergence)</td></tr><tr><td><b>MACD</b></td><td>MACD above signal line, histogram expanding</td><td>High-level dead cross, shrinking histogram</td></tr><tr><td><b>Volume</b></td><td>Breakout days on 1.5×+ average volume</td><td>Rallies on shrinking volume = weak participation</td></tr><tr><td><b>Relative strength</b></td><td>Outperforming the index (SPY/QQQ)</td><td>Market up, stock flat = money isn\'t here</td></tr></table></div>'
++'<h2><span class="ic">🎯</span>Filter 3: Entry trigger (when do I buy?)</h2><div class="grid g2"><div class="card"><h3>A. Breakout entry</h3><p>A <b>high-volume close through</b> clear resistance / prior highs. Pros: unambiguous, instant momentum. Cons: worse price, fake-out risk. Stop goes below the breakout shelf.</p></div><div class="card"><h3>B. Pullback entry (with-trend)</h3><p>In an uptrend, scale in at the <b>50-day MA zone or prior breakout shelf</b> after a reversal cue (long lower wick, inside day). Pros: better price, tighter stop. Cons: the bus may never stop for you.</p></div></div>'
++'<h2><span class="ic">🛑</span>Stop-Loss Rules (the survival column)</h2><div class="twrap"><table class="data"><tr><th>Method</th><th>How</th><th>Use when</th></tr><tr><td><b>Technical stop</b></td><td>Just <b>below</b> key support / the breakout shelf (allow for noise)</td><td>First choice; anchored to market structure</td></tr><tr><td><b>ATR stop</b></td><td>Entry − 2×ATR(14); volatile names automatically get more room</td><td>High-volatility names, or no clean structure</td></tr><tr><td><b>Money stop</b></td><td>Max loss <b>1–2% of the account</b> per trade — this sizes the position, it doesn\'t pick the price</td><td>Always, combined with the two above</td></tr></table></div><div class="panel" style="margin-top:12px"><b>Iron rule:</b> the stop is decided <b>at order time</b>. It may only ever move in your favour (protecting profit), never against you. Stop hit = execute. There is no “waiting for it to come back.”</div>'
++'<h2><span class="ic">💰</span>Take-Profit Rules (let winners run — by the book)</h2><div class="grid g3"><div class="card"><h3>R-multiple scaling</h3><p>Define 1R = entry − stop. Sell 1/3 at 2R, 1/3 at 3R, let the rest run. Ensures the wins are big enough to pay for the losses.</p></div><div class="card"><h3>Trailing stop</h3><p>Chandelier: highest high − 3×ATR; or exit on a break of the 20-day low. Don\'t leave the train while the trend lasts.</p></div><div class="card"><h3>Signal exit</h3><p>Any sell signal (table below) trims the position even before targets. The market tells you when to leave — not the target price.</p></div></div>'
++'<h2><span class="ic">🔻</span>Sell / Reduce Signals</h2><div class="twrap"><table class="data"><tr><th>Signal</th><th>Definition</th><th>Action</th></tr><tr><td>Stop hit</td><td>Close touches the pre-set stop</td><td><b>Exit in full, unconditionally</b></td></tr><tr><td>Structure break</td><td>Close below a 200-day MA that has turned down</td><td>Cut half or more</td></tr><tr><td>Divergence + churn</td><td>New price high without RSI/MACD confirmation; heavy volume with no progress</td><td>Sell 1/3 to 1/2</td></tr><tr><td>Thesis broken</td><td>Your entry reason is refuted: profit warning, major dilution, policy U-turn</td><td>Reassess — usually exit</td></tr><tr><td>Target reached</td><td>2R / 3R or the top of the scenario range</td><td>Take profit per the scaling rules</td></tr></table></div>'
++'<h2><span class="ic">⚖️</span>Position Sizing (the heart of the system)</h2><div class="formula">Shares = (Account × Risk% per trade) ÷ (Entry − Stop)</div><p>Example: $100,000 account, 1% risk (= $1,000), entry $200, stop $183 → $17 risk per share → 1,000 ÷ 17 ≈ <b>58 shares</b> (≈ $11,600 position, 11.6% of the account).</p><p>Position size is set by <b>stop distance</b>, not by conviction. Tight stop → more shares; wide stop → fewer shares — risk stays constant. The Calculators page does this for you.</p>'
++'<h2><span class="ic">📋</span>Discipline Checklist (run it before every order)</h2><div class="panel"><ul class="checklist"><li>Is the broad market (QQQ/SPY) above its 200-day MA?</li><li>Does the stock pass all three filters?</li><li>Entry, stop and target prices written down?</li><li>Reward-to-risk ≥ 2R? (No new position under 2R)</li><li>Size computed by formula, per-trade risk ≤ 1–2%?</li><li>Total exposure to the same theme (e.g. AI) within its cap?</li><li>Any binary event (earnings, FOMC) within 3 days? (Shrink or wait)</li><li>Is this the plan — or FOMO?</li><li>If this trade loses, does it affect your life or your sleep?</li><li>Is the stop order actually placed (not just “in your head”)?</li></ul></div>'
+},
+
+macro:{
+zh:'<h1>🌐 宏觀經濟儀表板</h1><p class="sub">宏觀決定「揸乜類資產」，個股分析決定「揸邊隻」。次序唔可以倒轉。</p>'
++'<div class="grid g4" style="margin-top:18px"><div class="stat"><div class="k">聯邦基金利率</div><div class="v">3.50–3.75%</div><div class="d">6月維持不變 · 新主席 Warsh</div></div><div class="stat"><div class="k">美國通脹（CPI 年率）</div><div class="v">~4.2%</div><div class="d">遠高於 2% 目標 · 再加息機會約 1/3</div></div><div class="stat"><div class="k">現貨金</div><div class="v">$3,998</div><div class="d">月跌 6% · 年升 20%</div></div><div class="stat"><div class="k">市場政權判讀</div><div class="v">滯脹傾向</div><div class="d">通脹黏性 + 政策緊縮風險</div></div></div>'
++'<div class="panel" style="margin-top:14px"><h3>而家嘅局面（2026 年 7 月中）</h3><ul><li><b>政策：</b>聯儲局 6 月 17 日維持利率 3.50–3.75% 不變——係新主席 Kevin Warsh 上任後首個決定。點陣圖轉鷹：委員中位數預期 2026 年底利率<b>高過而家</b>。下次議息 7 月 28–29。</li><li><b>通脹：</b>CPI 約 4.2%，返到目標 2% 遙遙無期；中東緊張推高油價，加劇「高利率更耐」預期。</li><li><b>市場：</b>納指靠 AI 盈利兌現撐住近歷史高位（QQQ $718）；金價由高位回落測 $4,000；長債受壓。呢個組合正正就係「盈利同利率鬥快」嘅格局。</li></ul></div>'
++'<h2><span class="ic">🧭</span>五大支柱分析框架</h2><div class="twrap"><table class="data"><tr><th>支柱</th><th>睇乜嘢</th><th>而家讀數</th></tr><tr><td><b>1. 增長</b></td><td>GDP、PMI、就業、零售</td><td>溫和——未衰退，但高利率慢慢咬</td></tr><tr><td><b>2. 通脹</b></td><td>CPI／PCE、油價、工資</td><td>偏高（4.2%）兼黏性；油價係上行風險</td></tr><tr><td><b>3. 政策</b></td><td>聯儲局利率、點陣圖、縮表</td><td>限制性兼偏鷹；有再加息尾部風險</td></tr><tr><td><b>4. 流動性</b></td><td>信貸利差、美元、資金流</td><td>中性偏緊；美元受高息支撐</td></tr><tr><td><b>5. 估值／情緒</b></td><td>指數市盈率、市寬、恐慌指數</td><td>估值偏高、AI 交易擠擁——順風但脆</td></tr></table></div>'
++'<h2><span class="ic">🕐</span>投資時鐘：四種政權與資產取向</h2><div class="matrix"><div class="mx"><h4>🌤️ 增長↑ 通脹↓（金髮女孩）</h4><div class="who">最利好：成長股、科技（QQQ）、長債。經典牛市環境。</div></div><div class="mx" style="border-color:rgba(240,180,41,.5)"><h4>🔥 增長↑ 通脹↑（過熱）← 近似而家</h4><div class="who">利好：商品、能源、價值股、短債／現金收益。成長股要靠盈利硬撐估值。</div></div><div class="mx" style="border-color:rgba(242,113,109,.5)"><h4>🌫️ 增長↓ 通脹↑（滯脹）← 風險情境</h4><div class="who">利好：現金、黃金、必需消費、能源。股債齊跌嘅環境，最難做。</div></div><div class="mx"><h4>❄️ 增長↓ 通脹↓（衰退）</h4><div class="who">利好：長債、防守股；後段開始撈優質成長股。</div></div></div>'
++'<div class="panel" style="margin-top:16px"><h3>對各資產嘅含義（以本站報告為例）</h3><ul><li><b>QQQ／成長股：</b>順風（AI 盈利）逆風（利率）並存——用 200 日均線制度守住，唔賭方向。</li><li><b>NVDA：</b>高利率環境下「有真盈利」係護身符，但倍數修復要等政策轉向。</li><li><b>黃金：</b>短期被實質利率壓住；若聯儲局被迫喺高通脹下停手，即刻變最大受益者。</li><li><b>USAR 類投機股：</b>高利率＝融資貴＝攤薄痛。呢類股喺減息週期先有真正順風。</li><li><b>現金／貨幣基金：</b>3.5%+ 無風險收益——持幣等機會本身係一個有效倉位。</li></ul></div>'
++'<h2><span class="ic">📅</span>前瞻日曆</h2><div class="twrap"><table class="data"><tr><th>日期</th><th>事件</th><th>點解重要</th></tr><tr><td>7月28–29</td><td>FOMC 議息會議</td><td>約 1/3 機會加息 25 點子；聲明措辭定調下半年</td></tr><tr><td>8月中</td><td>7 月 CPI</td><td>4.2% 通脹有冇見頂跡象</td></tr><tr><td>8月下旬</td><td>NVDA 業績</td><td>AI 交易嘅溫度計；$91B 指引成唔成</td></tr><tr><td>每季</td><td>四大雲廠 capex 指引</td><td>成個科技板塊嘅先行指標</td></tr><tr><td>持續</td><td>中東局勢／油價</td><td>油價→通脹→利率嘅傳導鏈</td></tr></table></div>',
+en:'<h1>🌐 Macro Dashboard</h1><p class="sub">Macro decides <i>which asset classes</i> to hold; stock analysis decides <i>which names</i>. Never reverse that order.</p>'
++'<div class="grid g4" style="margin-top:18px"><div class="stat"><div class="k">Fed funds rate</div><div class="v">3.50–3.75%</div><div class="d">Held in June · new Chair Warsh</div></div><div class="stat"><div class="k">US inflation (CPI y/y)</div><div class="v">~4.2%</div><div class="d">Far above the 2% target · ~1/3 odds of a hike</div></div><div class="stat"><div class="k">Spot gold</div><div class="v">$3,998</div><div class="d">−6% on the month · +20% y/y</div></div><div class="stat"><div class="k">Regime read</div><div class="v">Stagflation-tilt</div><div class="d">Sticky inflation + tightening risk</div></div></div>'
++'<div class="panel" style="margin-top:14px"><h3>The setup (mid-July 2026)</h3><ul><li><b>Policy:</b> the Fed held at 3.50–3.75% on June 17 — Chair Kevin Warsh\'s first decision. The dots turned hawkish: the median member sees rates <b>higher</b> by end-2026. Next meeting July 28–29.</li><li><b>Inflation:</b> CPI around 4.2%, nowhere near the 2% target; Middle East tension is pushing oil up and reinforcing “higher for longer.”</li><li><b>Markets:</b> the Nasdaq holds near record highs on delivered AI earnings (QQQ $718); gold has slid to test $4,000; long bonds under pressure. This is exactly the “earnings racing rates” regime.</li></ul></div>'
++'<h2><span class="ic">🧭</span>The Five-Pillar Framework</h2><div class="twrap"><table class="data"><tr><th>Pillar</th><th>What to watch</th><th>Current read</th></tr><tr><td><b>1. Growth</b></td><td>GDP, PMIs, employment, retail</td><td>Moderate — no recession, but high rates biting slowly</td></tr><tr><td><b>2. Inflation</b></td><td>CPI/PCE, oil, wages</td><td>High (4.2%) and sticky; oil is the upside risk</td></tr><tr><td><b>3. Policy</b></td><td>Fed rate, dots, QT</td><td>Restrictive and hawkish-leaning; tail risk of another hike</td></tr><tr><td><b>4. Liquidity</b></td><td>Credit spreads, dollar, flows</td><td>Neutral-to-tight; dollar supported by yield gap</td></tr><tr><td><b>5. Valuation / sentiment</b></td><td>Index P/E, breadth, VIX</td><td>Rich multiples, crowded AI trade — tailwind, but brittle</td></tr></table></div>'
++'<h2><span class="ic">🕐</span>The Investment Clock: Four Regimes</h2><div class="matrix"><div class="mx"><h4>🌤️ Growth↑ Inflation↓ (Goldilocks)</h4><div class="who">Best for: growth stocks, tech (QQQ), long bonds. The classic bull regime.</div></div><div class="mx" style="border-color:rgba(240,180,41,.5)"><h4>🔥 Growth↑ Inflation↑ (Overheat) ← roughly now</h4><div class="who">Favours: commodities, energy, value, short duration / cash yield. Growth stocks must carry their multiples on earnings alone.</div></div><div class="mx" style="border-color:rgba(242,113,109,.5)"><h4>🌫️ Growth↓ Inflation↑ (Stagflation) ← the risk case</h4><div class="who">Favours: cash, gold, staples, energy. Stocks and bonds fall together — the hardest tape.</div></div><div class="mx"><h4>❄️ Growth↓ Inflation↓ (Recession)</h4><div class="who">Favours: long bonds, defensives; start accumulating quality growth late in the phase.</div></div></div>'
++'<div class="panel" style="margin-top:16px"><h3>What it means per asset (using this site\'s reports)</h3><ul><li><b>QQQ / growth:</b> tailwind (AI earnings) and headwind (rates) coexist — hold via the 200-day regime rule instead of betting on the outcome.</li><li><b>NVDA:</b> real earnings are the armour in a high-rate world; multiple expansion waits for the policy turn.</li><li><b>Gold:</b> pinned down by real rates near-term; the moment the Fed is forced to stop hiking amid high inflation, it becomes the biggest winner.</li><li><b>USAR-type speculation:</b> high rates = expensive financing = painful dilution. These names get their real tailwind in a cutting cycle.</li><li><b>Cash / money funds:</b> 3.5%+ risk-free — holding cash while you wait is itself a valid position.</li></ul></div>'
++'<h2><span class="ic">📅</span>Forward Calendar</h2><div class="twrap"><table class="data"><tr><th>Date</th><th>Event</th><th>Why it matters</th></tr><tr><td>Jul 28–29</td><td>FOMC meeting</td><td>~1/3 odds of a 25bp hike; statement language sets H2 tone</td></tr><tr><td>Mid-Aug</td><td>July CPI</td><td>Any sign 4.2% inflation is peaking</td></tr><tr><td>Late Aug</td><td>NVDA earnings</td><td>Thermometer of the AI trade; does the $91B guide hold</td></tr><tr><td>Quarterly</td><td>Big-4 cloud capex guides</td><td>The leading indicator for all of tech</td></tr><tr><td>Ongoing</td><td>Middle East / oil</td><td>The oil → inflation → rates transmission chain</td></tr></table></div>'
+},
+
+disc:{
+zh:'<h1>⚠️ 免責聲明</h1><div class="panel" style="margin-top:18px"><p><b>本網站所有內容僅供教育及一般資訊用途，不構成任何證券、基金、商品或其他金融產品之要約、招攬、投資建議或推薦。</b></p><p>內容基於編寫時公開可得嘅資料，價位、指標及水平均屬<b>示例性質</b>，可能已經過時或不準確，亦不保證完整。所有「買入／賣出信號」、「止蝕位」、「止賺位」、「目標價」同「情境估值」都係分析框架嘅示範，<b>唔係對任何人嘅個別建議</b>。</p><p>投資涉及風險，證券價格可升可跌，甚至變成毫無價值；過往表現唔代表將來表現。閣下應該根據自身財務狀況、投資目標同風險承受能力作出獨立判斷，並喺需要時諮詢持牌財務顧問、券商或其他專業人士。</p><p>本網站編者可能持有或買賣文中提及嘅資產。使用本網站任何資訊所引致嘅任何損失，編者概不負責。</p></div>',
+en:'<h1>⚠️ Disclaimer</h1><div class="panel" style="margin-top:18px"><p><b>All content on this website is for education and general information only. Nothing here constitutes an offer, solicitation, investment advice or recommendation regarding any security, fund, commodity or other financial product.</b></p><p>Content is based on publicly available information at the time of writing. Prices, indicators and levels are <b>illustrative</b>, may be outdated or inaccurate, and completeness is not guaranteed. All “buy/sell signals,” “stop-loss levels,” “profit targets” and “scenario valuations” are demonstrations of an analytical framework — <b>not personal recommendations to anyone</b>.</p><p>Investing involves risk. Prices can fall as well as rise, and holdings can become worthless. Past performance is not indicative of future results. Make independent decisions based on your own financial situation, objectives and risk tolerance, and consult a licensed financial adviser, broker or other professional where appropriate.</p><p>The author may hold or trade assets mentioned. The author accepts no liability for any loss arising from the use of any information on this site.</p></div>'
+}
+};
+
+/* ---------------- Calculator labels ---------------- */
+var CALC={
+ zh:{
+  h1:'🧮 計算工具', sub:'交易系統嘅執行層：先計風險，再落單。',
+  c1h:'倉位計算機（風險定倉法）', c1p:'輸入帳戶資金、可承受風險同止蝕位，自動計出應買股數——止蝕越遠、倉位越細，每筆交易風險恆定。',
+  acct:'帳戶資金（$）', riskp:'單筆風險（帳戶 %）', entry:'入場價（$）', stop:'止蝕價（$）', target:'目標價（$，可選）',
+  r_risk:'呢筆交易最多輸', r_pshare:'每股風險', r_shares:'應買股數', r_cost:'注碼金額', r_pct:'佔帳戶比例',
+  r_t1:'1R 目標價', r_t2:'2R 目標價', r_t3:'3R 目標價', r_rr:'風險回報比（目標價）',
+  rr_bad:'⚠️ 風險回報比低過 2R——按系統規則，唔建議開呢筆倉。',
+  stop_bad:'⚠️ 止蝕價必須低過入場價（本計算機以做多為準）。',
+  c2h:'ATR 止蝕計算機', c2p:'用平均真實波幅（ATR）設定波動性止蝕：畀足雜訊空間，又唔會離譜。ATR 數值可以喺任何圖表軟件（例如 TradingView 嘅 ATR(14) 指標）讀到。',
+  atr_entry:'入場價（$）', atr_v:'ATR(14) 數值', atr_m:'ATR 倍數', atr_stop:'建議止蝕價', atr_pct:'止蝕距離', atr_trail:'吊燈式移動止賺（最高價 − 3×ATR）', atr_hint:'保守 1.5×｜標準 2×｜波動股 3×',
+  note:'計算結果只係執行紀律嘅工具，唔代表任何買賣建議。'
+ },
+ en:{
+  h1:'🧮 Calculators', sub:'The execution layer of the trading system: size the risk before the order.',
+  c1h:'Position-Size Calculator (risk-based)', c1p:'Enter account size, acceptable risk and your stop — it returns the share count. Wider stop → smaller position; risk per trade stays constant.',
+  acct:'Account size ($)', riskp:'Risk per trade (% of account)', entry:'Entry price ($)', stop:'Stop-loss price ($)', target:'Target price ($, optional)',
+  r_risk:'Max loss on this trade', r_pshare:'Risk per share', r_shares:'Shares to buy', r_cost:'Position cost', r_pct:'% of account',
+  r_t1:'1R target', r_t2:'2R target', r_t3:'3R target', r_rr:'Reward:risk (at target)',
+  rr_bad:'⚠️ Reward-to-risk below 2R — by system rules, don\'t open this trade.',
+  stop_bad:'⚠️ Stop must be below entry (this calculator assumes a long position).',
+  c2h:'ATR Stop Calculator', c2p:'Set a volatility-based stop using Average True Range: enough room for noise, but not absurd. Read ATR(14) off any charting app (e.g. TradingView).',
+  atr_entry:'Entry price ($)', atr_v:'ATR(14) value', atr_m:'ATR multiple', atr_stop:'Suggested stop', atr_pct:'Stop distance', atr_trail:'Chandelier trail (high − 3×ATR)', atr_hint:'Conservative 1.5× | Standard 2× | Volatile 3×',
+  note:'These results are a discipline tool, not a recommendation to trade.'
+ }
+};
+
+/* ---------------- App engine ---------------- */
+var $=function(s){return document.querySelector(s)};
+
+function typeLabel(tp){ return tp==='stock'?t('type_stock'):tp==='etf'?t('type_etf'):t('type_comm'); }
+function sigBadge(sig){ return '<span class="badge sig-'+sig+'">'+t('sig')[sig]+'</span>'; }
+function riskMeter(r){
+  var dots=''; for(var i=0;i<5;i++) dots+='<i></i>';
+  return '<span class="risk r'+r+'">'+dots+'</span> <span style="font-size:12.5px;color:var(--muted)">'+t('risk_lbl')[r]+'</span>';
+}
+function fmt(n,dp){ if(dp===undefined)dp=2; if(!isFinite(n))return'—';
+  return n.toLocaleString(L==='zh'?'zh-Hant':'en-US',{minimumFractionDigits:dp,maximumFractionDigits:dp}); }
+
+/* ---------------- views ---------------- */
+function viewHome(){
+  var rows=REPORTS.map(function(r){
+    return '<tr class="rowlink" onclick="location.hash=\'#/report/'+r.id+'\'">'
+      +'<td><b style="color:var(--gold)">'+r.ticker+'</b></td>'
+      +'<td>'+T(r.name)+'</td>'
+      +'<td><span class="chip">'+typeLabel(r.type)+'</span></td>'
+      +'<td><b>'+r.price+'</b><div style="font-size:11.5px;color:var(--faint)">'+r.asOf+'</div></td>'
+      +'<td>'+sigBadge(r.signal)+'</td>'
+      +'<td>'+riskMeter(r.risk)+'</td>'
+      +'<td style="color:var(--muted);font-size:12.5px">'+r.updated+'</td></tr>';
+  }).join('');
+  return '<div class="view">'
+   +'<div class="hero"><span class="tag">'+t('hero_tag')+'</span>'
+   +'<h1>'+t('hero_h1')+'</h1><p class="sub" style="max-width:640px">'+t('hero_sub')+'</p>'
+   +'<div class="cta"><a class="btn primary" href="#/reports">'+t('hero_cta1')+'</a>'
+   +'<a class="btn" href="#/system">'+t('hero_cta2')+'</a>'
+   +'<a class="btn" href="#/tools">'+t('hero_cta3')+'</a></div></div>'
+   +searchBox()
+   +'<h2><span class="ic">📡</span>'+t('latest')+'</h2>'
+   +'<div class="twrap"><table class="data"><thead><tr><th>'+t('th_ticker')+'</th><th>'+t('th_name')+'</th><th>'+t('th_type')+'</th><th>'+t('th_price')+'</th><th>'+t('th_signal')+'</th><th>'+t('th_risk')+'</th><th>'+t('th_updated')+'</th></tr></thead><tbody>'+rows+'</tbody></table></div>'
+   +'<h2><span class="ic">🗂️</span>'+t('feat_h')+'</h2>'
+   +'<div class="grid g4">'
+   +'<div class="card link" onclick="location.hash=\'#/reports\'"><div class="ic">📑</div><h3>'+t('feat1_t')+'</h3><p>'+t('feat1_p')+'</p></div>'
+   +'<div class="card link" onclick="location.hash=\'#/system\'"><div class="ic">📐</div><h3>'+t('feat2_t')+'</h3><p>'+t('feat2_p')+'</p></div>'
+   +'<div class="card link" onclick="location.hash=\'#/tools\'"><div class="ic">🛡️</div><h3>'+t('feat3_t')+'</h3><p>'+t('feat3_p')+'</p></div>'
+   +'<div class="card link" onclick="location.hash=\'#/macro\'"><div class="ic">🌐</div><h3>'+t('feat4_t')+'</h3><p>'+t('feat4_p')+'</p></div>'
+   +'</div>'
+   +'<div class="disc"><b>⚠️</b> '+t('disc_short')+'</div></div>';
+}
+
+var FLT='all';
+function viewReports(){
+  var btns=['all','stock','etf','comm'].map(function(f){
+    var lbl=f==='all'?t('f_all'):f==='stock'?t('f_stock'):f==='etf'?t('f_etf'):t('f_comm');
+    return '<button class="fbtn'+(FLT===f?' on':'')+'" onclick="window.__setFlt(\''+f+'\')">'+lbl+'</button>';
+  }).join('');
+  var list=REPORTS.filter(function(r){return FLT==='all'||r.type===FLT}).map(function(r){
+    var tags=r.tags.map(function(g){return '<span class="chip">'+T(g)+'</span>'}).join('');
+    return '<div class="card link" onclick="location.hash=\'#/report/'+r.id+'\'">'
+     +'<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">'
+     +'<b style="font-size:19px;color:var(--gold)">'+r.ticker+'</b>'+sigBadge(r.signal)+'</div>'
+     +'<h3 style="margin:6px 0 2px">'+T(r.name)+'</h3>'
+     +'<div style="font-size:13px;color:var(--muted);margin-bottom:8px"><b style="color:var(--text)">'+r.price+'</b> · '+t('m_asof')+' '+r.asOf+' · '+riskMeter(r.risk)+'</div>'
+     +'<p>'+T(r.summary)+'</p>'
+     +'<div style="margin-top:10px">'+tags+'</div>'
+     +'<div style="margin-top:12px;color:var(--gold);font-size:13.5px;font-weight:600">'+t('view_report')+'</div></div>';
+  }).join('');
+  return '<div class="view"><h1>'+t('reports_h')+'</h1><p class="sub">'+t('reports_sub')+'</p>'
+   +searchBox()
+   +'<div class="filters">'+btns+'</div><div class="grid g2">'+list+'</div>'
+   +'<div class="disc"><b>⚠️</b> '+t('disc_short')+'</div></div>';
+}
+window.__setFlt=function(f){ FLT=f; render(); };
+
+function viewReport(id){
+  var r=null; for(var i=0;i<REPORTS.length;i++) if(REPORTS[i].id===id) r=REPORTS[i];
+  if(!r) return viewReports();
+  var tags=r.tags.map(function(g){return '<span class="chip gold">'+T(g)+'</span>'}).join('');
+  var loc=L==='zh'?'zh_TW':'en';
+  var tv='<div class="tvbox"><iframe loading="lazy" src="https://s.tradingview.com/widgetembed/?symbol='+encodeURIComponent(r.tv)
+    +'&interval=D&hidesidetoolbar=1&symboledit=0&saveimage=0&theme=dark&style=1&timezone=Asia%2FHong_Kong&hideideas=1&locale='+loc+'"></iframe>'
+    +'<div class="cap">'+t('tv_cap')+'</div></div>';
+  var secs=r.sections.map(function(s){
+    return '<div class="sec'+(s.cls?' '+s.cls:'')+'"><h3><span>'+s.ic+'</span>'+T(s.title)+'</h3>'+T(s.body)+'</div>';
+  }).join('');
+  return '<div class="view"><a class="back" href="#/reports">'+t('back')+'</a>'
+   +'<div class="rephead">'
+   +'<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap">'
+   +'<div><div class="ticker">'+r.ticker+' <span class="chip" style="vertical-align:middle">'+typeLabel(r.type)+'</span></div>'
+   +'<div class="nm">'+T(r.name)+'</div></div>'
+   +'<div style="text-align:right"><div class="price">'+r.price+'</div><div style="font-size:12px;color:var(--muted)">'+t('m_base')+' · '+t('m_asof')+' '+r.asOf+'</div></div></div>'
+   +'<div style="margin-top:10px;font-size:13.5px;color:var(--muted)">'+T(r.range)+'</div>'
+   +'<div style="margin-top:10px">'+tags+'</div>'
+   +'<div class="meta">'
+   +'<div>'+t('m_signal')+'<b>'+sigBadge(r.signal)+'</b></div>'
+   +'<div>'+t('m_risk')+'<b>'+riskMeter(r.risk)+'</b></div>'
+   +'<div>'+t('m_updated')+'<b>'+r.updated+'</b></div>'
+   +'</div></div>'
+   +'<div class="tvw" id="repInfo"></div>'
+   +tv+secs
+   +'<div class="disc"><b>⚠️</b> '+t('disc_short')+'</div></div>';
+}
+
+function viewStatic(key){ return '<div class="view">'+PAGES[key][L]+'<div class="disc"><b>⚠️</b> '+t('disc_short')+'</div></div>'; }
+
+function viewTools(){
+  var c=CALC[L];
+  return '<div class="view"><h1>'+c.h1+'</h1><p class="sub">'+c.sub+'</p>'
+  +'<div class="grid g2" style="margin-top:18px;align-items:start">'
+  /* --- position size calculator --- */
+  +'<div class="panel calc"><h3>💼 '+c.c1h+'</h3><p style="font-size:13px;color:var(--muted);margin-top:6px">'+c.c1p+'</p>'
+  +'<div class="row"><div><label>'+c.acct+'</label><input id="pAcct" type="number" value="100000" min="0" step="any"></div>'
+  +'<div><label>'+c.riskp+'</label><input id="pRisk" type="number" value="1" min="0.1" max="10" step="0.1"></div></div>'
+  +'<div class="row"><div><label>'+c.entry+'</label><input id="pEntry" type="number" value="200" min="0" step="any"></div>'
+  +'<div><label>'+c.stop+'</label><input id="pStop" type="number" value="183" min="0" step="any"></div></div>'
+  +'<div><label>'+c.target+'</label><input id="pTarget" type="number" value="236" min="0" step="any"></div>'
+  +'<div class="res" id="pRes"></div></div>'
+  /* --- ATR stop calculator --- */
+  +'<div class="panel calc"><h3>📏 '+c.c2h+'</h3><p style="font-size:13px;color:var(--muted);margin-top:6px">'+c.c2p+'</p>'
+  +'<div class="row"><div><label>'+c.atr_entry+'</label><input id="aEntry" type="number" value="200" min="0" step="any"></div>'
+  +'<div><label>'+c.atr_v+'</label><input id="aAtr" type="number" value="6.5" min="0" step="any"></div></div>'
+  +'<div><label>'+c.atr_m+' <span style="color:var(--faint)">('+c.atr_hint+')</span></label>'
+  +'<select id="aMult"><option value="1.5">1.5×</option><option value="2" selected>2×</option><option value="2.5">2.5×</option><option value="3">3×</option></select></div>'
+  +'<div class="res" id="aRes"></div></div>'
+  +'</div>'
+  +'<div class="disc"><b>⚠️</b> '+c.note+' '+t('disc_short')+'</div></div>';
+}
+
+function calcPos(){
+  var c=CALC[L];
+  var acct=parseFloat($('#pAcct').value)||0, riskp=parseFloat($('#pRisk').value)||0,
+      entry=parseFloat($('#pEntry').value)||0, stop=parseFloat($('#pStop').value)||0,
+      target=parseFloat($('#pTarget').value)||0;
+  var el=$('#pRes');
+  if(entry<=0||stop<=0||acct<=0||riskp<=0){ el.innerHTML='<div class="warn">…</div>'; return; }
+  if(stop>=entry){ el.innerHTML='<div class="warn">'+c.stop_bad+'</div>'; return; }
+  var riskAmt=acct*riskp/100, pshare=entry-stop, shares=Math.floor(riskAmt/pshare);
+  var cost=shares*entry, pct=cost/acct*100;
+  var capped='';
+  if(cost>acct){ shares=Math.floor(acct/entry); cost=shares*entry; pct=cost/acct*100;
+    capped='<div class="warn">'+(L==='zh'?'⚠️ 風險額度容許嘅注碼超過帳戶資金，已按全倉上限調低股數。':'⚠️ Risk budget allowed a position larger than the account — share count capped at 100% of capital.')+'</div>'; }
+  var html=''
+   +'<div class="line"><span>'+c.r_risk+'</span><b class="dn">$'+fmt(riskAmt)+'</b></div>'
+   +'<div class="line"><span>'+c.r_pshare+'</span><b>$'+fmt(pshare)+'</b></div>'
+   +'<div class="line"><span>'+c.r_shares+'</span><b class="big">'+fmt(shares,0)+'</b></div>'
+   +'<div class="line"><span>'+c.r_cost+'</span><b>$'+fmt(cost)+'</b></div>'
+   +'<div class="line"><span>'+c.r_pct+'</span><b>'+fmt(pct,1)+'%</b></div>'
+   +'<div class="line"><span>'+c.r_t1+'</span><b class="up">$'+fmt(entry+pshare)+'</b></div>'
+   +'<div class="line"><span>'+c.r_t2+'</span><b class="up">$'+fmt(entry+2*pshare)+'</b></div>'
+   +'<div class="line"><span>'+c.r_t3+'</span><b class="up">$'+fmt(entry+3*pshare)+'</b></div>';
+  if(target>entry){
+    var rr=(target-entry)/pshare;
+    html+='<div class="line"><span>'+c.r_rr+'</span><b class="'+(rr>=2?'up':'dn')+'">'+fmt(rr,2)+'R</b></div>';
+    if(rr<2) html+='<div class="warn">'+c.rr_bad+'</div>';
+  }
+  el.innerHTML=html+capped;
+}
+function calcAtr(){
+  var c=CALC[L];
+  var entry=parseFloat($('#aEntry').value)||0, atr=parseFloat($('#aAtr').value)||0,
+      m=parseFloat($('#aMult').value)||2;
+  var el=$('#aRes');
+  if(entry<=0||atr<=0){ el.innerHTML='<div class="warn">…</div>'; return; }
+  var stop=entry-atr*m, dist=(entry-stop)/entry*100;
+  el.innerHTML=''
+   +'<div class="line"><span>'+c.atr_stop+'</span><b class="big">$'+fmt(stop)+'</b></div>'
+   +'<div class="line"><span>'+c.atr_pct+'</span><b>'+fmt(dist,1)+'%</b></div>'
+   +'<div class="line"><span>'+c.atr_trail+'</span><b>$'+fmt(entry-3*atr)+'</b></div>';
+}
+function bindTools(){
+  ['pAcct','pRisk','pEntry','pStop','pTarget'].forEach(function(id){ $('#'+id).addEventListener('input',calcPos); });
+  ['aEntry','aAtr'].forEach(function(id){ $('#'+id).addEventListener('input',calcAtr); });
+  $('#aMult').addEventListener('change',calcAtr);
+  calcPos(); calcAtr();
+}
+
+/* ---------------- TradingView live widgets ---------------- */
+function tvLocale(){ return L==='zh'?'zh_TW':'en'; }
+function tvMount(id,widget,cfg){
+  var el=document.getElementById(id); if(!el) return;
+  var wrap=document.createElement('div'); wrap.className='tradingview-widget-container';
+  var inner=document.createElement('div'); inner.className='tradingview-widget-container__widget';
+  wrap.appendChild(inner);
+  var s=document.createElement('script'); s.async=true;
+  s.src='https://s3.tradingview.com/external-embedding/embed-widget-'+widget+'.js';
+  s.text=JSON.stringify(cfg);
+  wrap.appendChild(s);
+  el.innerHTML=''; el.appendChild(wrap);
+}
+/* 預載指標：Supertrend（圖上直接標示買賣轉向位：綠=買入區 紅=賣出區）＋ EMA50 / SMA200 / RSI / MACD
+   （用官方 tv.js constructor，指標同深色主題先會生效；免費 widget 只支援內置指標，唔行到自訂 Pine Script） */
+var TV_STUDIES=['STD;Supertrend','MASimple@tv-basicstudies','MAExp@tv-basicstudies','RSI@tv-basicstudies','MACD@tv-basicstudies'];
+var TV_OVR={'moving average.length':200,'moving average exponential.length':50};
+var _tvjs=false;
+function ensureTvJs(cb){
+  if(window.TradingView&&window.TradingView.widget){ cb(); return; }
+  if(!_tvjs){
+    _tvjs=true;
+    var s=document.createElement('script'); s.src='https://s3.tradingview.com/tv.js'; s.async=true;
+    document.head.appendChild(s);
+  }
+  var n=0, iv=setInterval(function(){
+    if(window.TradingView&&window.TradingView.widget){ clearInterval(iv); cb(); }
+    else if(++n>150) clearInterval(iv); /* 15秒放棄（離線） */
+  },100);
+}
+function tvChart(id,sym,h){
+  var el=document.getElementById(id); if(!el) return;
+  el.innerHTML='<div id="'+id+'_c" style="height:'+(h||600)+'px"></div>';
+  ensureTvJs(function(){
+    if(!document.getElementById(id+'_c')) return; /* 已轉咗頁 */
+    new TradingView.widget({
+      container_id:id+'_c', width:'100%', height:h||600, symbol:sym, interval:'D',
+      timezone:'Asia/Hong_Kong', theme:'dark', style:'1', locale:tvLocale(),
+      withdateranges:true, hide_side_toolbar:false, allow_symbol_change:true,
+      studies:TV_STUDIES, studies_overrides:TV_OVR
+    });
+  });
+}
+function tvGauge(id,sym,h){
+  tvMount(id,'technical-analysis',{symbol:sym,width:'100%',height:h||440,locale:tvLocale(),
+    colorTheme:'dark',isTransparent:true,showIntervalTabs:true,displayMode:'single',interval:'1D'});
+}
+function mountTape(){
+  tvMount('tape','ticker-tape',{symbols:[
+    {proName:'FOREXCOM:SPXUSD',title:L==='zh'?'標普500':'S&P 500'},
+    {proName:'FOREXCOM:NSXUSD',title:L==='zh'?'納指100':'Nasdaq 100'},
+    {proName:'NASDAQ:NVDA',title:'NVDA'},
+    {proName:'NASDAQ:QQQ',title:'QQQ'},
+    {proName:'NASDAQ:USAR',title:'USAR'},
+    {proName:'TVC:GOLD',title:L==='zh'?'黃金':'Gold'},
+    {proName:'TVC:USOIL',title:L==='zh'?'美油':'WTI'},
+    {proName:'HSI:HSI',title:L==='zh'?'恒指':'HSI'}
+  ],showSymbolLogo:true,isTransparent:true,displayMode:'adaptive',colorTheme:'dark',locale:tvLocale()});
+}
+
+/* ---------------- 箭嘴買賣信號（自家引擎） ----------------
+   TradingView 免費 embed 畫唔到自訂箭嘴，所以呢度自己嚟：
+   數據 = Yahoo Finance 日線（經 corsproxy.io 中轉過 CORS）；圖 = TradingView 開源 Lightweight Charts；
+   信號規則喺 arwSignals()：SMA200 趨勢過濾 + EMA20/50 交叉 + RSI 確認。
+   XSS 防護：代號輸入白名單過濾（arwClean）+ 任何動態內容入 HTML 前先 arwEsc()。 */
+function arwEsc(s){ return String(s).replace(/[&<>"']/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function arwClean(s){ return String(s).trim().toUpperCase().replace(/[^A-Z0-9.\-=^]/g,''); }
+var _lwc=false;
+function ensureLwc(cb){
+  if(window.LightweightCharts){ cb(); return; }
+  if(!_lwc){ _lwc=true;
+    var s=document.createElement('script');
+    s.src='https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js';
+    s.async=true; document.head.appendChild(s);
+  }
+  var n=0, iv=setInterval(function(){
+    if(window.LightweightCharts){ clearInterval(iv); cb(); }
+    else if(++n>150) clearInterval(iv); /* 15秒放棄（離線） */
+  },100);
+}
+var WL_KEY='il_watchlist', WL_DEF=['NVDA','QQQ','AAPL','DXYZ'];
+function wlGet(){
+  try{ var a=JSON.parse(localStorage.getItem(WL_KEY)||'null');
+    if(Array.isArray(a)&&a.length) return a.map(arwClean).filter(Boolean);
+  }catch(e){}
+  return WL_DEF.slice();
+}
+function wlSave(a){ try{ localStorage.setItem(WL_KEY,JSON.stringify(a)); }catch(e){} }
+var ARW_SYM=wlGet()[0];
+/* 兩種模式：D=中長線（日線圖，兩年）/ H=短線（1小時圖，三個月）。f/s=快慢 EMA，tr=趨勢 SMA */
+var ARW_MODE='D';
+var ARW_CFG={ D:{range:'2y',interval:'1d',f:20,s:50,tr:200}, H:{range:'3mo',interval:'1h',f:9,s:21,tr:100} };
+/* 帶模式參數嘅翻譯：{f}{s}{t}=均線長度，{h}=統計時距，{p}=數據範圍 */
+function arwT(k){
+  var c=ARW_CFG[ARW_MODE], d=ARW_MODE==='D';
+  return t(k).replace(/\{f\}/g,c.f).replace(/\{s\}/g,c.s).replace(/\{t\}/g,c.tr)
+    .replace(/\{h\}/g,t(d?'arw_h_d':'arw_h_h')).replace(/\{p\}/g,t(d?'arw_p_d':'arw_p_h'));
+}
+window.__arwMode=function(m){ ARW_MODE=m; render(); };
+/* 公司名 → 代號（Yahoo search API） */
+function arwResolve(q,ok,fail){
+  var y='https://query1.finance.yahoo.com/v1/finance/search?q='+encodeURIComponent(q)+'&quotesCount=6&newsCount=0';
+  var urls=['https://corsproxy.io/?url='+encodeURIComponent(y), y];
+  (function go(i){
+    if(i>=urls.length){ fail(); return; }
+    fetch(urls[i]).then(function(r){ return r.json(); }).then(function(j){
+      var qs=((j&&j.quotes)||[]).filter(function(x){ return x.symbol; });
+      if(qs.length) ok(String(qs[0].symbol).toUpperCase()); else fail();
+    }).catch(function(){ go(i+1); });
+  })(0);
+}
+window.__arwSel=function(s){ ARW_SYM=arwClean(s); render(); };
+window.__arwDel=function(s){
+  var a=wlGet().filter(function(x){ return x!==s; });
+  if(!a.length) a=WL_DEF.slice();
+  wlSave(a); if(ARW_SYM===s) ARW_SYM=a[0];
+  render();
+};
+/* 加自選：代號直接用；公司名就用 Yahoo search 轉做代號。（唔用 prompt()：內嵌瀏覽器成日封鎖彈窗） */
+window.__arwAdd=function(){
+  var el=document.getElementById('arwNew'); if(!el) return;
+  var raw=el.value.trim(); if(!raw){ el.focus(); return; }
+  el.value=t('arw_searching'); el.disabled=true;
+  function done(sym){ var a=wlGet(); if(a.indexOf(sym)<0) a.push(sym); wlSave(a); ARW_SYM=sym; render(); }
+  function miss(){ ARW_SYM=arwClean(raw)||'X'; render(); } /* render 會顯示「搵唔到」提示 */
+  var v=arwClean(raw);
+  if(v&&v===raw.toUpperCase().replace(/\s+/g,'')){
+    arwFetch(v,function(){ done(v); },function(){ arwResolve(raw,done,miss); });
+  } else {
+    arwResolve(raw,done,miss);
+  }
+};
+function arwFetch(sym,ok,fail){
+  var cfg=ARW_CFG[ARW_MODE];
+  var y='https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(sym)+'?range='+cfg.range+'&interval='+cfg.interval;
+  var urls=['https://corsproxy.io/?url='+encodeURIComponent(y), y];
+  (function go(i){
+    if(i>=urls.length){ fail(); return; }
+    fetch(urls[i]).then(function(r){ return r.json(); }).then(function(j){
+      var res=j&&j.chart&&j.chart.result&&j.chart.result[0];
+      if(!res||!res.timestamp){ fail(); return; }
+      var q=res.indicators.quote[0], bars=[];
+      for(var k=0;k<res.timestamp.length;k++){
+        if(q.open[k]==null||q.close[k]==null) continue;
+        bars.push({time:res.timestamp[k],open:q.open[k],high:q.high[k],low:q.low[k],close:q.close[k]});
+      }
+      if(bars.length>60) ok(bars,res.meta); else fail();
+    }).catch(function(){ go(i+1); });
+  })(0);
+}
+/* 指標數學 */
+function arwSma(v,n){ var o=[],s=0,i; for(i=0;i<v.length;i++){ s+=v[i]; if(i>=n) s-=v[i-n]; o.push(i>=n-1?s/n:null); } return o; }
+function arwEma(v,n){ var o=[],k=2/(n+1),e=null,s=0,i; for(i=0;i<v.length;i++){
+  if(i<n-1){ s+=v[i]; o.push(null); }
+  else if(i===n-1){ s+=v[i]; e=s/n; o.push(e); }
+  else { e=v[i]*k+e*(1-k); o.push(e); } } return o; }
+function arwRsi(v,n){ var o=[null],g=0,l=0,i,d; for(i=1;i<v.length;i++){ d=v[i]-v[i-1];
+  if(i<=n){ g+=Math.max(d,0); l+=Math.max(-d,0); o.push(i===n?100-100/(1+(g/n)/((l/n)||1e-9)):null); if(i===n){ g/=n; l/=n; } }
+  else { g=(g*(n-1)+Math.max(d,0))/n; l=(l*(n-1)+Math.max(-d,0))/n; o.push(100-100/(1+g/(l||1e-9))); } }
+  return o; }
+/* 信號規則：只做多。買入 = 趨勢(價>SMA200) + 動能(EMA20升穿EMA50 或 重上SMA200) + RSI≥50；
+   賣出 = EMA20跌穿EMA50 或 收市跌穿SMA200 */
+function arwSignals(bars){
+  var c=bars.map(function(b){ return b.close; });
+  var cfg=ARW_CFG[ARW_MODE];
+  var e20=arwEma(c,cfg.f), e50=arwEma(c,cfg.s), s200=arwSma(c,cfg.tr), rsi=arwRsi(c,14);
+  var sig=[], inPos=false, entry=0, i;
+  for(i=1;i<bars.length;i++){
+    if(e20[i]==null||e50[i]==null||s200[i]==null||rsi[i]==null||e20[i-1]==null||e50[i-1]==null||s200[i-1]==null) continue;
+    var up=e20[i-1]<=e50[i-1]&&e20[i]>e50[i];
+    var dn=e20[i-1]>=e50[i-1]&&e20[i]<e50[i];
+    var brk=c[i-1]>=s200[i-1]&&c[i]<s200[i];
+    var rec=c[i-1]<=s200[i-1]&&c[i]>s200[i];
+    if(!inPos&&rsi[i]>=50&&((up&&c[i]>s200[i])||(rec&&e20[i]>e50[i]))){
+      inPos=true; entry=c[i];
+      sig.push({t:bars[i].time,type:'B',p:c[i],why:arwT(up?'arw_buy_why':'arw_buy_why2').replace('{r}',rsi[i].toFixed(0))});
+    } else if(inPos&&(dn||brk)){
+      inPos=false;
+      sig.push({t:bars[i].time,type:'S',p:c[i],ret:c[i]/entry-1,why:arwT(brk?'arw_sell_why_break':'arw_sell_why_cross')});
+    }
+  }
+  return {sig:sig,e20:e20,e50:e50,s200:s200,rsi:rsi,inPos:inPos,entry:entry};
+}
+function arwStats(res,lastClose){
+  var closed=res.sig.filter(function(s){ return s.type==='S'; });
+  var wins=0, tot=1, sum=0;
+  closed.forEach(function(s){ if(s.ret>0) wins++; tot*=1+s.ret; sum+=s.ret; });
+  return {n:closed.length,w:wins,tot:tot-1,avg:closed.length?sum/closed.length:0,
+    open:res.inPos?lastClose/res.entry-1:null};
+}
+function arwMacd(c){
+  var e12=arwEma(c,12), e26=arwEma(c,26), m=[], i, f=-1;
+  for(i=0;i<c.length;i++){ m.push(e12[i]==null||e26[i]==null?null:e12[i]-e26[i]); if(f<0&&m[i]!=null) f=i; }
+  var sig=new Array(c.length); for(i=0;i<c.length;i++) sig[i]=null;
+  if(f>=0){ var sub=arwEma(m.slice(f),9); for(i=f;i<c.length;i++) sig[i]=sub[i-f]; }
+  return {m:m,s:sig};
+}
+/* 「預測」= 誠實嘅機率統計：而家嘅技術狀態，歷史上出現過之後 20 個交易日點行 */
+function arwOutlook(bars,res){
+  var box=document.getElementById('arwOutlook'); if(!box) return;
+  var c=bars.map(function(b){ return b.close; }), i=c.length-1;
+  if(res.s200[i]==null||res.rsi[i]==null){
+    box.innerHTML='<p style="color:var(--faint)">'+t('arw_pred_few').replace('{n}','0')+'</p>'; return;
+  }
+  var md=arwMacd(c), g='#22c55e', r='#ef4444';
+  var checks=[
+    [c[i]>res.s200[i], arwT('arw_pred_c1')],
+    [res.e20[i]>res.e50[i], arwT('arw_pred_c2')],
+    [res.s200[i-20]!=null&&res.s200[i]>res.s200[i-20], arwT('arw_pred_c3')],
+    [res.rsi[i]>=50, t('arw_pred_c4')],
+    [md.m[i]!=null&&md.s[i]!=null&&md.m[i]>md.s[i], t('arw_pred_c5')]
+  ];
+  var score=0; checks.forEach(function(x){ if(x[0]) score++; });
+  var lbl=score>=4?[g,t('arw_pred_bull')]:score<=1?[r,t('arw_pred_bear')]:['#eab308',t('arw_pred_neu')];
+  function bucket(x){ return x<45?0:x<=60?1:2; }
+  var key=[c[i]>res.s200[i],res.e20[i]>res.e50[i],bucket(res.rsi[i])].join('|');
+  var n=0, wn=0, sum=0, j, f;
+  for(j=0;j<c.length-21;j++){
+    if(res.s200[j]==null||res.rsi[j]==null||res.e20[j]==null||res.e50[j]==null) continue;
+    if([c[j]>res.s200[j],res.e20[j]>res.e50[j],bucket(res.rsi[j])].join('|')!==key) continue;
+    f=c[j+20]/c[j]-1; n++; if(f>0) wn++; sum+=f;
+  }
+  function pc(x){ return '<b style="color:'+(x>=0?g:r)+'">'+(x>=0?'+':'')+(x*100).toFixed(1)+'%</b>'; }
+  var fwd=n>=8?arwT('arw_pred_fwd').replace('{n}',n).replace('{w}',Math.round(100*wn/n)).replace('{a}',pc(sum/n))
+            :arwT('arw_pred_few').replace('{n}',n);
+  var rec=res.inPos?arwT('arw_pred_rec_hold')
+        :(checks[0][0]&&checks[1][0]&&checks[3][0])?arwT('arw_pred_rec_ready')
+        :t('arw_pred_rec_wait');
+  var ob=res.rsi[i]>70?'<p style="color:#eab308;font-size:13px;margin-top:6px">'+t('arw_pred_ob').replace('{r}',res.rsi[i].toFixed(0))+'</p>':'';
+  box.innerHTML='<p style="color:var(--text)">'+t('arw_pred_score')+'：<b style="color:'+lbl[0]+'">'+score+'/5 — '+lbl[1]+'</b></p>'
+   +'<div style="margin:8px 0 4px">'+checks.map(function(x){
+      return '<p style="font-size:13px;margin:3px 0;color:var(--faint)"><span style="color:'+(x[0]?g:r)+'">'+(x[0]?'✓':'✗')+'</span> '+x[1]+'</p>';
+    }).join('')+'</div>'+ob
+   +'<p style="color:var(--text);font-size:13.5px;margin-top:8px">'+fwd+'</p>'
+   +'<p style="color:var(--text);margin-top:10px"><b>'+t('arw_pred_rec')+'：</b>'+rec+'</p>'
+   +'<p class="mini" style="margin-top:8px">'+t('arw_pred_disc')+'</p>';
+}
+var _arwChart=null, _arwRefs=null, _arwTimer=null;
+/* 更新時間戳（自家圖每分鐘自動刷新；顯示畀用戶知幾時更新過） */
+function arwStamp(){
+  var el=document.getElementById('arwUpd'); if(!el) return;
+  var d=new Date(), p=function(x){ return (x<10?'0':'')+x; };
+  el.textContent=t('arw_upd').replace('{t}',p(d.getHours())+':'+p(d.getMinutes())+':'+p(d.getSeconds()));
+}
+/* 將最新 bars 套入現有圖表（唔重建，保留縮放） */
+function arwApply(bars){
+  if(!_arwRefs) return;
+  var res=arwSignals(bars);
+  function ld(d){ return bars.map(function(b,i){ return d[i]==null?null:{time:b.time,value:d[i]}; }).filter(Boolean); }
+  _arwRefs.cs.setData(bars);
+  _arwRefs.lf.setData(ld(res.e20)); _arwRefs.ls.setData(ld(res.e50)); _arwRefs.lt.setData(ld(res.s200));
+  _arwRefs.cs.setMarkers(res.sig.map(function(s){ return s.type==='B'
+    ?{time:s.t,position:'belowBar',color:'#22c55e',shape:'arrowUp',text:'BUY'}
+    :{time:s.t,position:'aboveBar',color:'#ef4444',shape:'arrowDown',text:'SELL'}; }));
+  arwPanel(bars,res); arwStamp();
+}
+function arwRefresh(){
+  if(!document.getElementById('arwChart')||!_arwRefs){ clearInterval(_arwTimer); return; }
+  var sym=ARW_SYM, mode=ARW_MODE;
+  arwFetch(sym,function(bars){
+    if(ARW_SYM!==sym||ARW_MODE!==mode) return;
+    arwApply(bars);
+  },function(){ /* 靜靜哋失敗，一分鐘後再試 */ });
+}
+function mountArrow(){
+  var el=document.getElementById('arwChart'); if(!el) return;
+  clearInterval(_arwTimer); _arwRefs=null;
+  el.innerHTML='<div style="padding:44px 20px;text-align:center;color:var(--faint)">'+t('arw_load')+'</div>';
+  var sym=ARW_SYM, mode=ARW_MODE;
+  arwFetch(sym,function(bars){
+    ensureLwc(function(){
+      var box=document.getElementById('arwChart'); if(!box||ARW_SYM!==sym||ARW_MODE!==mode) return;
+      box.innerHTML='';
+      if(_arwChart){ try{ _arwChart.remove(); }catch(e){} _arwChart=null; }
+      var ch=LightweightCharts.createChart(box,{height:430,autoSize:true,
+        layout:{background:{color:'transparent'},textColor:'#8fa3c0',fontSize:11},
+        grid:{vertLines:{color:'rgba(140,160,200,.07)'},horzLines:{color:'rgba(140,160,200,.07)'}},
+        rightPriceScale:{borderColor:'rgba(140,160,200,.2)'},
+        timeScale:{borderColor:'rgba(140,160,200,.2)',timeVisible:mode==='H',secondsVisible:false}});
+      _arwChart=ch;
+      function mk(color,w){ return ch.addLineSeries({color:color,lineWidth:w,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false}); }
+      _arwRefs={cs:ch.addCandlestickSeries({upColor:'#22c55e',downColor:'#ef4444',wickUpColor:'#22c55e',wickDownColor:'#ef4444',borderVisible:false}),
+        lf:mk('#eab308',1), ls:mk('#3b82f6',1), lt:mk('#a855f7',2)};
+      arwApply(bars);
+      ch.timeScale().fitContent();
+      _arwTimer=setInterval(arwRefresh,60000); /* 每分鐘自動更新報價 */
+    });
+  },function(){
+    var box=document.getElementById('arwChart'); if(!box||ARW_SYM!==sym) return;
+    var msg=t('arw_err').replace('{s}',arwEsc(sym));
+    if(/SPACE/.test(sym)) msg+='<br><br>'+t('arw_spacex');
+    box.innerHTML='<div style="padding:36px 22px;color:var(--faint);line-height:1.8">⚠️ '+msg+'</div>';
+    ['arwStatus','arwStats','arwLog','arwOutlook'].forEach(function(id){ var p=document.getElementById(id); if(p) p.innerHTML=''; });
+  });
+}
+function arwPanel(bars,res){
+  var last=bars[bars.length-1].close;
+  var st=arwStats(res,last), g='#22c55e', r='#ef4444';
+  function pc(x){ return '<b style="color:'+(x>=0?g:r)+'">'+(x>=0?'+':'')+(x*100).toFixed(1)+'%</b>'; }
+  var s1=document.getElementById('arwStatus');
+  if(s1) s1.innerHTML=res.inPos
+    ?'<p style="color:var(--text)">🟢 <b>'+t('arw_long')+'</b> — '+t('arw_entry')+' $'+res.entry.toFixed(2)+' → $'+last.toFixed(2)+'（'+pc(st.open)+'）</p>'
+    :'<p style="color:var(--text)">⚪ '+t('arw_flat')+'</p>';
+  var s2=document.getElementById('arwStats');
+  if(s2) s2.innerHTML=st.n
+    ?'<p style="color:var(--text)">'+t('arw_trades')+'：<b>'+st.n+'</b>　'+t('arw_win')+'：<b>'+st.w+'/'+st.n+'</b>　'+t('arw_avg')+'：'+pc(st.avg)+'　'+t('arw_tot')+'：'+pc(st.tot)+'</p><p class="mini" style="margin-top:6px">'+arwT('arw_bt_note')+'</p>'
+    :'<p style="color:var(--faint)">'+arwT('arw_no_tr')+'</p>';
+  var s3=document.getElementById('arwLog');
+  if(s3){
+    var items=res.sig.slice().reverse().slice(0,8).map(function(s){
+      var d=new Date(s.t*1000).toISOString().slice(0,10), b=s.type==='B';
+      return '<div class="card" style="margin-bottom:10px"><p style="color:var(--text)"><b style="color:'+(b?g:r)+'">'
+        +(b?'▲ BUY':'▼ SELL')+'</b>　'+d+'　$'+s.p.toFixed(2)+(s.ret!=null?'　（'+pc(s.ret)+'）':'')
+        +'</p><p style="color:var(--faint);font-size:13px;margin-top:6px;line-height:1.7">'+s.why+'</p></div>';
+    }).join('');
+    s3.innerHTML=items||'<div class="card"><p style="color:var(--faint)">'+arwT('arw_none')+'</p></div>';
+  }
+  arwOutlook(bars,res);
+}
+
+/* ---------------- search any ticker ---------------- */
+function searchBox(){
+  return '<div class="panel" style="margin-top:22px"><h3>'+t('search_h')+'</h3>'
+   +'<div class="searchbar" style="margin-top:10px"><input id="azInput" placeholder="'+t('search_ph')+'">'
+   +'<button class="btn primary" onclick="window.__go()">'+t('search_btn')+'</button></div>'
+   +'<p style="font-size:12.5px;color:var(--faint);margin-top:8px">'+t('search_hint')+'</p></div>';
+}
+window.__go=function(){
+  var el=document.getElementById('azInput'); if(!el) return;
+  var v=el.value.trim().toUpperCase().replace(/[^A-Z0-9:.\-_]/g,'');
+  if(v) location.hash='#/analyze/'+v;
+};
+function bindSearch(){
+  var el=document.getElementById('azInput'); if(!el) return;
+  el.addEventListener('keydown',function(e){ if(e.key==='Enter') window.__go(); });
+}
+
+function viewAnalyze(sym){
+  return '<div class="view"><a class="back" href="#/reports">'+t('back')+'</a>'
+   +'<h1>🔍 '+sym+'</h1><p class="sub">'+t('az_note')+'</p>'
+   +'<div class="tvw" id="azInfo"></div>'
+   +'<h2><span class="ic">📈</span>'+t('az_chart')+'</h2><div class="tvw" style="margin-top:0" id="azChart"></div>'
+   +'<div class="grid g2" style="margin-top:14px;align-items:start">'
+   +'<div><h2 style="margin-top:0"><span class="ic">🎯</span>'+t('az_ta')+'</h2><div class="tvw" style="margin-top:0" id="azTa"></div></div>'
+   +'<div><h2 style="margin-top:0"><span class="ic">🏢</span>'+t('az_prof')+'</h2><div class="tvw" style="margin-top:0" id="azProf"></div></div>'
+   +'</div>'
+   +'<h2><span class="ic">📊</span>'+t('az_fin')+'</h2><div class="tvw" style="margin-top:0" id="azFin"></div>'
+   +'<h2><span class="ic">📰</span>'+t('az_news')+'</h2><div class="tvw" style="margin-top:0" id="azNews"></div>'
+   +searchBox()
+   +'<div class="disc"><b>⚠️</b> '+t('tv_cap')+' '+t('disc_short')+'</div></div>';
+}
+function mountAnalyze(sym){
+  tvMount('azInfo','symbol-info',{symbol:sym,width:'100%',locale:tvLocale(),colorTheme:'dark',isTransparent:true});
+  tvChart('azChart',sym,560);
+  tvGauge('azTa',sym,430);
+  tvMount('azProf','symbol-profile',{symbol:sym,width:'100%',height:430,locale:tvLocale(),colorTheme:'dark',isTransparent:true});
+  tvMount('azFin','financials',{symbol:sym,width:'100%',height:460,locale:tvLocale(),colorTheme:'dark',isTransparent:true,displayMode:'regular'});
+  tvMount('azNews','timeline',{feedMode:'symbol',symbol:sym,width:'100%',height:450,locale:tvLocale(),colorTheme:'dark',isTransparent:true,displayMode:'regular'});
+  bindSearch();
+}
+
+/* ---------------- trading system (live signal chart) ---------------- */
+var SYS_SYM='NASDAQ:NVDA';
+window.__sys=function(s){ SYS_SYM=s; render(); };
+window.__sysAsk=function(){
+  var el=document.getElementById('sysNew'); if(!el) return;
+  var v=el.value.trim().toUpperCase().replace(/[^A-Z0-9:.\-_]/g,'');
+  if(v){ SYS_SYM=v; render(); } else el.focus();
+};
+function viewSystem(){
+  var btns=REPORTS.map(function(r){
+    return '<button class="fbtn'+(SYS_SYM===r.tv?' on':'')+'" onclick="window.__sys(\''+r.tv+'\')">'+r.ticker+'</button>';
+  }).join('');
+  var chips=wlGet().map(function(s){
+    return '<button class="fbtn'+(ARW_SYM===s?' on':'')+'" onclick="window.__arwSel(\''+s+'\')">'+arwEsc(s)
+     +'<span onclick="event.stopPropagation();window.__arwDel(\''+s+'\')" style="opacity:.5;margin-left:6px">✕</span></button>';
+  }).join('');
+  return '<div class="view"><h1>'+t('sys_h')+'</h1><p class="sub">'+arwT('arw_sub')+'</p>'
+   +'<div class="filters" style="margin-bottom:8px">'
+   +'<button class="fbtn'+(ARW_MODE==='D'?' on':'')+'" onclick="window.__arwMode(\'D\')">'+t('arw_mode_d')+'</button>'
+   +'<button class="fbtn'+(ARW_MODE==='H'?' on':'')+'" onclick="window.__arwMode(\'H\')">'+t('arw_mode_h')+'</button></div>'
+   +'<div class="filters" style="margin-bottom:0">'+chips
+   +'<input id="arwNew" placeholder="'+t('arw_ph')+'" style="background:rgba(255,255,255,.05);border:1px solid rgba(140,160,200,.28);border-radius:9px;color:var(--text);padding:7px 11px;font-size:13px;width:215px">'
+   +'<button class="fbtn" onclick="window.__arwAdd()">'+t('arw_add')+'</button></div>'
+   +'<div class="tvw" id="arwChart" style="height:430px"></div>'
+   +'<p style="font-size:12.5px;color:var(--faint);margin-top:8px">'+arwT('arw_legend')+'</p>'
+   +'<div class="grid g2" style="margin-top:12px;align-items:start">'
+   +'<div class="card"><h3 style="margin-top:0">'+t('arw_status_h')+'</h3><div id="arwStatus"></div></div>'
+   +'<div class="card"><h3 style="margin-top:0">'+arwT('arw_stats_h')+'</h3><div id="arwStats"></div></div></div>'
+   +'<div class="card" style="margin-top:14px"><h3 style="margin-top:0">🔮 '+t('arw_pred_h')+'</h3><div id="arwOutlook"></div></div>'
+   +'<h2><span class="ic">💡</span>'+t('arw_log_h')+'</h2><div id="arwLog"></div>'
+   +'<h2><span class="ic">📈</span>'+t('tvsec_h')+'</h2><p class="sub" style="margin-top:4px">'+t('sys_sub')+'</p>'
+   +'<div class="filters" style="margin-bottom:0">'+btns
+   +'<input id="sysNew" placeholder="'+t('sys_ph')+'" style="background:rgba(255,255,255,.05);border:1px solid rgba(140,160,200,.28);border-radius:9px;color:var(--text);padding:7px 11px;font-size:13px;width:215px">'
+   +'<button class="fbtn" onclick="window.__sysAsk()">＋ '+t('search_btn')+'…</button></div>'
+   +'<div class="tvw" id="sysChart"></div>'
+   +'<h2><span class="ic">🎯</span>'+t('sys_gauge')+'</h2><div class="tvw" style="margin-top:0" id="sysTa"></div>'
+   +'<h2><span class="ic">👁️</span>'+t('sys_read')+'</h2>'
+   +'<div class="card" style="margin-bottom:14px;border-color:var(--accent,#4caf50)"><p style="color:var(--text)">'+t('sys_read0')+'</p></div>'
+   +'<div class="grid g3"><div class="card"><p style="color:var(--text)">'+t('sys_read1')+'</p></div>'
+   +'<div class="card"><p style="color:var(--text)">'+t('sys_read2')+'</p></div>'
+   +'<div class="card"><p style="color:var(--text)">'+t('sys_read3')+'</p></div></div>'
+   +'<details class="rules"><summary>'+t('sys_rules')+'</summary>'+PAGES.system[L]+'</details>'
+   +'<div class="disc"><b>⚠️</b> '+t('tv_cap')+' '+t('disc_short')+'</div></div>';
+}
+function mountSystem(){
+  mountArrow(); tvChart('sysChart',SYS_SYM,610); tvGauge('sysTa',SYS_SYM,450);
+  var a=document.getElementById('arwNew'), s=document.getElementById('sysNew');
+  function isEnter(e){ return e.key==='Enter'||e.key==='Return'||e.keyCode===13; }
+  if(a) a.addEventListener('keydown',function(e){ if(isEnter(e)) window.__arwAdd(); });
+  if(s) s.addEventListener('keydown',function(e){ if(isEnter(e)) window.__sysAsk(); });
+}
+
+/* ---------------- macro (live calendar + news) ---------------- */
+function viewMacro(){
+  return '<div class="view"><h1>🌐 '+t('nav_macro')+'</h1><p class="sub">'+t('live_sub')+'</p>'
+   +'<h2><span class="ic">📅</span>'+t('macro_cal')+'</h2><div class="tvw" style="margin-top:0" id="mcCal"></div>'
+   +'<h2><span class="ic">📰</span>'+t('macro_news')+'</h2><div class="tvw" style="margin-top:0" id="mcNews"></div>'
+   +'<details class="rules"><summary>'+t('macro_rules')+'</summary>'+PAGES.macro[L]+'</details>'
+   +'<div class="disc"><b>⚠️</b> '+t('disc_short')+'</div></div>';
+}
+function mountMacro(){
+  tvMount('mcCal','events',{colorTheme:'dark',isTransparent:true,width:'100%',height:500,locale:tvLocale(),importanceFilter:'0,1',countryFilter:'us,cn,hk,eu,jp,gb'});
+  tvMount('mcNews','timeline',{feedMode:'market',market:'stock',isTransparent:true,displayMode:'regular',width:'100%',height:550,colorTheme:'dark',locale:tvLocale()});
+}
+
+/* ---------------- live markets page ---------------- */
+function viewLive(){
+  return '<div class="view"><h1>'+t('live_h')+'</h1><p class="sub">'+t('live_sub')+'</p>'
+   +'<h2><span class="ic">⭐</span>'+t('live_quotes')+'</h2><div class="tvw" style="margin-top:0" id="lvQuotes"></div>'
+   +'<h2><span class="ic">🌍</span>'+t('live_mkt')+'</h2><div class="tvw" style="margin-top:0" id="lvOverview"></div>'
+   +'<h2><span class="ic">📰</span>'+t('live_news')+'</h2><div class="tvw" style="margin-top:0" id="lvNews"></div>'
+   +searchBox()
+   +'<div class="disc"><b>⚠️</b> '+t('tv_cap')+' '+t('disc_short')+'</div></div>';
+}
+function mountLive(){
+  tvMount('lvQuotes','market-quotes',{width:'100%',height:340,showSymbolLogo:true,isTransparent:true,colorTheme:'dark',locale:tvLocale(),
+    symbolsGroups:[{name:t('live_quotes'),symbols:[
+      {name:'NASDAQ:USAR',displayName:'USA Rare Earth'},
+      {name:'NASDAQ:NVDA',displayName:'NVIDIA'},
+      {name:'NASDAQ:QQQ',displayName:'Invesco QQQ'},
+      {name:'TVC:GOLD',displayName:L==='zh'?'黃金現貨':'Gold Spot'}
+    ]}]});
+  tvMount('lvOverview','market-overview',{colorTheme:'dark',dateRange:'3M',showChart:true,locale:tvLocale(),isTransparent:true,width:'100%',height:450,
+    tabs:[
+      {title:L==='zh'?'指數':'Indices',symbols:[
+        {s:'FOREXCOM:SPXUSD',d:L==='zh'?'標普500':'S&P 500'},
+        {s:'FOREXCOM:NSXUSD',d:L==='zh'?'納指100':'Nasdaq 100'},
+        {s:'FOREXCOM:DJI',d:L==='zh'?'道指':'Dow 30'},
+        {s:'HSI:HSI',d:L==='zh'?'恒生指數':'Hang Seng'},
+        {s:'TVC:NI225',d:L==='zh'?'日經225':'Nikkei 225'}]},
+      {title:L==='zh'?'商品':'Commodities',symbols:[
+        {s:'TVC:GOLD',d:L==='zh'?'黃金':'Gold'},
+        {s:'TVC:SILVER',d:L==='zh'?'白銀':'Silver'},
+        {s:'TVC:USOIL',d:L==='zh'?'美油 WTI':'WTI Oil'},
+        {s:'TVC:UKOIL',d:L==='zh'?'布蘭特油':'Brent Oil'}]},
+      {title:L==='zh'?'債息／外匯':'Rates / FX',symbols:[
+        {s:'TVC:US10Y',d:L==='zh'?'美國10年債息':'US 10Y Yield'},
+        {s:'TVC:DXY',d:L==='zh'?'美元指數':'Dollar Index'},
+        {s:'FX_IDC:USDHKD',d:L==='zh'?'美元／港元':'USD/HKD'},
+        {s:'FX:USDJPY',d:L==='zh'?'美元／日圓':'USD/JPY'}]}
+    ]});
+  tvMount('lvNews','timeline',{feedMode:'market',market:'stock',isTransparent:true,displayMode:'regular',width:'100%',height:500,colorTheme:'dark',locale:tvLocale()});
+  bindSearch();
+}
+
+/* ---------------- router / chrome ---------------- */
+var NAV=[['#/home','nav_home'],['#/reports','nav_reports'],['#/live','nav_live'],['#/system','nav_system'],['#/macro','nav_macro'],['#/tools','nav_tools'],['#/disc','nav_disc']];
+
+function renderChrome(){
+  var hash=location.hash||'#/home';
+  $('#nav').innerHTML=NAV.map(function(n){
+    var on=(hash===n[0])||(n[0]==='#/reports'&&hash.indexOf('#/report')===0);
+    return '<a href="'+n[0]+'"'+(on?' class="active"':'')+'>'+t(n[1])+'</a>';
+  }).join('');
+  $('#brandSub').textContent=t('brandSub');
+  $('#langBtn').textContent=(L==='zh'?'EN':'繁');
+  $('#footL').textContent=t('disc_short');
+  $('#footR').textContent=t('foot_r')+' · '+t('updated_lbl');
+  document.documentElement.lang=(L==='zh'?'zh-Hant':'en');
+  document.title=(L==='zh'?'InvestLens 智投透視 — 投資分析與交易策略':'InvestLens — Investment Research & Trading Strategy');
+}
+
+function postRender(hash){
+  if(hash==='#/tools') bindTools();
+  else if(hash==='#/live') mountLive();
+  else if(hash==='#/system') mountSystem();
+  else if(hash==='#/macro') mountMacro();
+  else if(hash.indexOf('#/analyze/')===0) mountAnalyze(decodeURIComponent(hash.slice(10)));
+  else if(hash.indexOf('#/report/')===0){
+    var id=hash.slice(9),r=null,i;
+    for(i=0;i<REPORTS.length;i++) if(REPORTS[i].id===id) r=REPORTS[i];
+    if(r) tvMount('repInfo','symbol-info',{symbol:r.tv,width:'100%',locale:tvLocale(),colorTheme:'dark',isTransparent:true});
+  }
+  else bindSearch(); /* home / reports 頁有搜尋欄 */
+}
+
+function render(){
+  var hash=location.hash||'#/home';
+  var app=$('#app'), html;
+  if(hash.indexOf('#/report/')===0) html=viewReport(hash.slice(9));
+  else if(hash.indexOf('#/analyze/')===0) html=viewAnalyze(decodeURIComponent(hash.slice(10)));
+  else if(hash==='#/reports') html=viewReports();
+  else if(hash==='#/live') html=viewLive();
+  else if(hash==='#/system') html=viewSystem();
+  else if(hash==='#/macro') html=viewMacro();
+  else if(hash==='#/tools') html=viewTools();
+  else if(hash==='#/disc') html=viewStatic('disc');
+  else html=viewHome();
+  app.innerHTML=html;
+  renderChrome();
+  postRender(hash);
+  window.scrollTo(0,0);
+}
+
+$('#langBtn').addEventListener('click',function(){
+  L=(L==='zh'?'en':'zh');
+  localStorage.setItem(LS_LANG,L);
+  render();
+  mountTape(); /* 語言變咗要重載報價帶 */
+});
+window.addEventListener('hashchange',render);
+render();
+mountTape();
+
+})();
+</script>
+</body>
+</html>
