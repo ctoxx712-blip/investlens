@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="description" content="InvestLens 智投透視 — 股票、ETF、商品深度分析：基本面、技術面、宏觀經濟、買賣信號、止蝕止賺與倉位管理。雙語（繁體中文／English）投資研究網站。">
 <title>InvestLens 智投透視 — 投資分析與交易策略</title>
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
 <style>
 :root{
   --bg:#0a1120;
@@ -1049,7 +1051,7 @@ window.__arwAdd=function(){
   var el=document.getElementById('arwNew'); if(!el) return;
   var raw=el.value.trim(); if(!raw){ el.focus(); return; }
   el.value=t('arw_searching'); el.disabled=true;
-  function done(sym){ var a=wlGet(); if(a.indexOf(sym)<0) a.push(sym); wlSave(a); ARW_SYM=sym; render(); }
+  function done(sym){ sym=arwClean(sym); if(!sym){ miss(); return; } var a=wlGet(); if(a.indexOf(sym)<0) a.push(sym); wlSave(a); ARW_SYM=sym; render(); }
   function miss(){ ARW_SYM=arwClean(raw)||'X'; render(); } /* render 會顯示「搵唔到」提示 */
   var v=arwClean(raw);
   if(v&&v===raw.toUpperCase().replace(/\s+/g,'')){
@@ -1179,6 +1181,7 @@ function arwApply(bars,meta){
     var lb=bars[bars.length-1];
     lb.close=px; if(px>lb.high) lb.high=px; if(px<lb.low) lb.low=px;
   }
+  if(!px&&bars.length) px=bars[bars.length-1].close; /* 冇即市報價嘅產品：後備用最後收市價 */
   var pd=document.getElementById('arwPx');
   if(pd&&px){
     var prev=bars.length>1?bars[bars.length-2].close:null, chg=prev?px/prev-1:null;
