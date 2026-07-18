@@ -382,6 +382,12 @@ var UI={
   arw_spacex:'💡 SpaceX 係私人公司，未上市，冇股票代號，買唔到正股。想追 SpaceX 概念可以加「DXYZ」（Destiny Tech100 — 持有 SpaceX 股份嘅上市基金），但小心：佢股價經常比基金淨值高出好多（大幅溢價），風險極高。',
   arw_hint_add:'打公司名或者代號：Tesla｜NVDA｜0700.HK｜BTC-USD',
   arw_ph:'公司名或代號 例：Tesla / 0700.HK', sys_ph:'代號 例：NASDAQ:TSLA / HKEX:700',
+  news_none:'呢隻產品暫時冇個股新聞，以下係市場整體新聞：',
+  prof_sector:'板塊', prof_industry:'行業', prof_exch:'交易所', prof_type:'類型',
+  prof_r52:'52週波幅', prof_rday:'今日波幅', prof_vol:'成交量', prof_prev:'前收市價', prof_px:'現價',
+  prof_none:'攞唔到呢隻產品嘅基本資料（可能係新上市或者冷門產品）。',
+  ty_EQUITY:'股票', ty_ETF:'ETF 基金', ty_CRYPTOCURRENCY:'加密貨幣', ty_INDEX:'指數',
+  ty_FUTURE:'期貨', ty_CURRENCY:'外匯', ty_MUTUALFUND:'互惠基金',
   tvsec_h:'互動圖表（TradingView — 想加咩指標自己加）',
   arw_pred_h:'未來走勢預測（歷史機率統計）',
   arw_pred_score:'綜合技術評分',
@@ -464,6 +470,12 @@ var UI={
   arw_spacex:'💡 SpaceX is a private company — not listed, no ticker, no shares to buy. To track SpaceX exposure, add “DXYZ” (Destiny Tech100, a listed fund holding SpaceX shares) — but beware: it often trades far above its net asset value. Extremely high risk.',
   arw_hint_add:'Type a company name or symbol: Tesla | NVDA | 0700.HK | BTC-USD',
   arw_ph:'Name or symbol e.g. Tesla / 0700.HK', sys_ph:'Symbol e.g. NASDAQ:TSLA / HKEX:700',
+  news_none:'No stock-specific news for this asset yet — showing overall market news instead:',
+  prof_sector:'Sector', prof_industry:'Industry', prof_exch:'Exchange', prof_type:'Type',
+  prof_r52:'52-week range', prof_rday:'Day range', prof_vol:'Volume', prof_prev:'Previous close', prof_px:'Last price',
+  prof_none:'Could not load profile data for this asset (may be newly listed or thinly covered).',
+  ty_EQUITY:'Stock', ty_ETF:'ETF', ty_CRYPTOCURRENCY:'Crypto', ty_INDEX:'Index',
+  ty_FUTURE:'Futures', ty_CURRENCY:'Forex', ty_MUTUALFUND:'Mutual fund',
   tvsec_h:'Interactive Chart (TradingView — add any indicator yourself)',
   arw_pred_h:'Forward Outlook (historical probability)',
   arw_pred_score:'Composite technical score',
@@ -1303,6 +1315,151 @@ function arwPanel(bars,res){
   arwOutlook(bars,res);
 }
 
+/* ---------------- 個股新聞（Yahoo）----------------
+   TradingView 個股新聞只覆蓋大股票，細股／港股成日「No data here yet」。
+   改用 Yahoo search API 嘅 news；冇料就退回 TradingView 大市新聞，保證有嘢睇。
+   XSS 防護：標題／來源用 arwEsc() 先入 HTML，連結淨化引號並加 rel="noopener"。 */
+function arwNews(sym,id){
+  var el=document.getElementById(id); if(!el) return;
+  el.innerHTML='<div class="card"><p style="color:var(--faint)">'+t('arw_load')+'</p></div>';
+  var q=String(sym).split(':').pop().toUpperCase();      /* NASDAQ:NVDA → NVDA */
+  var base=q.split(/[.\-=]/)[0];                          /* 0700.HK → 0700；BTC-USD → BTC */
+  var px=function(u){ return 'https://corsproxy.io/?url='+encodeURIComponent(u); };
+  var kw='', first='';
+  function ago(ts){
+    var s=Math.max(0,Date.now()/1000-ts);
+    if(s<3600) return Math.round(s/60)+(L==='zh'?' 分鐘前':' min ago');
+    if(s<86400) return Math.round(s/3600)+(L==='zh'?' 小時前':'h ago');
+    return Math.round(s/86400)+(L==='zh'?' 日前':'d ago');
+  }
+  /* 相關性檢查：Yahoo 搵唔到就會回一堆無關嘅泛用新聞，靠 relatedTickers／標題關鍵字篩走 */
+  function rel(n){
+    var rt=(n.relatedTickers||[]).map(function(x){ return String(x).toUpperCase(); });
+    if(rt.indexOf(q)>=0||(base&&rt.indexOf(base)>=0)) return true;
+    if(first.length>=3&&String(n.title||'').toUpperCase().indexOf(first)>=0) return true;
+    return false;
+  }
+  function show(list){
+    var box=document.getElementById(id); if(!box) return;
+    list.sort(function(a,b){ return (b.providerPublishTime||0)-(a.providerPublishTime||0); }); /* 最新行先 */
+    box.innerHTML=list.slice(0,8).map(function(n){
+      var link=String(n.link||'#').replace(/["']/g,'');
+      var tm=n.providerPublishTime?ago(n.providerPublishTime):'';
+      return '<a class="card" style="display:block;margin-bottom:10px;text-decoration:none" href="'+link+'" target="_blank" rel="noopener">'
+       +'<p style="color:var(--text);font-weight:600;line-height:1.5">'+arwEsc(n.title||'')+'</p>'
+       +'<p style="color:var(--faint);font-size:12.5px;margin-top:5px">'+arwEsc(n.publisher||'')+(tm?'　·　'+tm:'')+'</p></a>';
+    }).join('');
+  }
+  function fallback(){
+    var box=document.getElementById(id); if(!box) return;
+    box.innerHTML='<p style="color:var(--faint);font-size:13px;margin-bottom:8px">'+t('news_none')+'</p><div id="'+id+'_tv"></div>';
+    tvMount(id+'_tv','timeline',{feedMode:'market',market:'stock',width:'100%',height:450,locale:tvLocale(),colorTheme:THEME,isTransparent:true,displayMode:'regular'});
+  }
+  /* 逐個關鍵字試（代號 → 公司全名 → 公司第一個字），收集所有相關新聞 */
+  function hunt(qs){
+    var found=[], seen={};
+    (function go(i){
+      if(i>=qs.length){ found.length?show(found):fallback(); return; }
+      fetch(px('https://query1.finance.yahoo.com/v1/finance/search?q='+encodeURIComponent(qs[i])+'&quotesCount=0&newsCount=10'))
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+          ((j&&j.news)||[]).forEach(function(n){
+            var k=n.uuid||n.title;
+            if(!seen[k]&&rel(n)){ seen[k]=1; found.push(n); }
+          });
+        }).catch(function(){}).then(function(){
+          if(found.length>=5){ show(found); return; }  /* 夠料就唔使再試 */
+          go(i+1);
+        });
+    })(0);
+  }
+  /* 先攞公司名：港股／加密貨幣用代號搜完全冇用，要用公司名先搵到相關新聞 */
+  fetch(px('https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(q)+'?range=1d&interval=1d'))
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      var m=j&&j.chart&&j.chart.result&&j.chart.result[0]&&j.chart.result[0].meta;
+      var nm=m&&(m.longName||m.shortName)||'';
+      kw=nm.replace(/\b(inc|corp|corporation|ltd|limited|holdings?|company|co|plc|group|sa|nv|ag|usd)\b\.?/gi,'').replace(/[,.]/g,'').trim();
+      first=(kw.split(/\s+/)[0]||'').toUpperCase();
+    })
+    .catch(function(){})
+    .then(function(){
+      var qs=[q];
+      if(kw&&kw.toUpperCase()!==q) qs.push(kw);
+      if(first&&first!==kw.toUpperCase()) qs.push(kw.split(/\s+/)[0]);
+      hunt(qs);
+    });
+}
+
+/* Yahoo 代號 → TradingView 代號。唔轉嘅話 TradingView widget 會顯示「目前此處沒有數據」 */
+function tvSym(s){
+  var q=String(s||'').toUpperCase();
+  if(q.indexOf(':')>=0) return q;                                  /* 已經係 TV 格式 */
+  var hk=q.match(/^0*(\d+)\.HK$/);       if(hk) return 'HKEX:'+hk[1];       /* 0700.HK → HKEX:700 */
+  var cn=q.match(/^(\d{6})\.(SS|SZ)$/);  if(cn) return (cn[2]==='SS'?'SSE:':'SZSE:')+cn[1];
+  var cx=q.match(/^([A-Z0-9]+)-USD$/);   if(cx) return 'CRYPTO:'+cx[1]+'USD';/* BTC-USD → CRYPTO:BTCUSD */
+  if(q==='GC=F') return 'TVC:GOLD';
+  if(q==='CL=F') return 'TVC:USOIL';
+  if(q==='SI=F') return 'TVC:SILVER';
+  if(q==='^GSPC') return 'SP:SPX';
+  if(q==='^IXIC') return 'NASDAQ:IXIC';
+  if(q==='^HSI') return 'HSI:HSI';
+  var jp=q.match(/^(\d+)\.T$/);          if(jp) return 'TSE:'+jp[1];
+  var uk=q.match(/^([A-Z]+)\.L$/);       if(uk) return 'LSE:'+uk[1];
+  return q;
+}
+/* 邊啲資產類型先有財務報表（加密／指數／期貨／外匯冇，唔好顯示空表） */
+function hasFin(type){ return !type||type==='EQUITY'; }
+
+/* ---------------- 自家公司簡介（Yahoo）----------------
+   TradingView symbol-profile 對細股／港股成日「No data here yet」，
+   改用 chart meta（名、交易所、價、波幅、成交量）＋ search API（板塊、行業）自己砌。 */
+function arwProfile(sym,id){
+  var el=document.getElementById(id); if(!el) return;
+  el.innerHTML='<div class="card"><p style="color:var(--faint)">'+t('arw_load')+'</p></div>';
+  var q=String(sym).split(':').pop();
+  var px=function(u){ return 'https://corsproxy.io/?url='+encodeURIComponent(u); };
+  var meta=null, info=null, done=0;
+  function fin(){
+    if(++done<2) return;
+    var box=document.getElementById(id); if(!box) return;
+    /* 非股票（加密／指數／期貨／外匯）冇財務報表，收起嗰個空表 */
+    var fs=document.getElementById('azFinSec');
+    if(fs&&info&&!hasFin(info.quoteType)) fs.style.display='none';
+    if(!meta){ box.innerHTML='<div class="card"><p style="color:var(--faint)">'+t('prof_none')+'</p></div>'; return; }
+    var cur=meta.currency||'', n=function(v,d){ return v==null?'—':Number(v).toLocaleString(undefined,{minimumFractionDigits:d||0,maximumFractionDigits:d||0}); };
+    var rows=[];
+    function add(k,v){ if(v) rows.push([k,v]); }
+    add(t('prof_type'), info&&info.quoteType?(t('ty_'+info.quoteType)||info.quoteType):null);
+    add(t('prof_exch'), meta.fullExchangeName||meta.exchangeName);
+    add(t('prof_sector'), info&&info.sector);
+    add(t('prof_industry'), info&&info.industry);
+    add(t('prof_px'), meta.regularMarketPrice!=null?n(meta.regularMarketPrice,2)+' '+cur:null);
+    add(t('prof_prev'), meta.chartPreviousClose!=null?n(meta.chartPreviousClose,2):null);
+    add(t('prof_rday'), meta.regularMarketDayLow!=null?n(meta.regularMarketDayLow,2)+' – '+n(meta.regularMarketDayHigh,2):null);
+    add(t('prof_r52'), meta.fiftyTwoWeekLow!=null?n(meta.fiftyTwoWeekLow,2)+' – '+n(meta.fiftyTwoWeekHigh,2):null);
+    add(t('prof_vol'), meta.regularMarketVolume!=null?n(meta.regularMarketVolume):null);
+    box.innerHTML='<div class="card"><h3 style="margin-top:0;color:var(--gold)">'+arwEsc(meta.longName||meta.shortName||q)+'</h3>'
+     +'<div style="margin-top:10px">'+rows.map(function(r){
+        return '<div style="display:flex;justify-content:space-between;gap:14px;padding:6px 0;border-bottom:1px solid var(--line)">'
+         +'<span style="color:var(--faint);font-size:13px">'+arwEsc(r[0])+'</span>'
+         +'<span style="color:var(--text);font-size:13.5px;font-weight:600;text-align:right">'+arwEsc(r[1])+'</span></div>';
+      }).join('')+'</div></div>';
+  }
+  fetch(px('https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(q)+'?range=1y&interval=1d'))
+    .then(function(r){ return r.json(); })
+    .then(function(j){ var res=j&&j.chart&&j.chart.result&&j.chart.result[0]; if(res) meta=res.meta; })
+    .catch(function(){}).then(fin);
+  fetch(px('https://query1.finance.yahoo.com/v1/finance/search?q='+encodeURIComponent(q)+'&quotesCount=4&newsCount=0'))
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      var qs=(j&&j.quotes)||[];
+      for(var i=0;i<qs.length;i++){ if(String(qs[i].symbol).toUpperCase()===q.toUpperCase()){ info=qs[i]; break; } }
+      if(!info&&qs.length) info=qs[0];
+    })
+    .catch(function(){}).then(fin);
+}
+
 /* ---------------- search any ticker ---------------- */
 function searchBox(){
   return '<div class="panel" style="margin-top:22px"><h3>'+t('search_h')+'</h3>'
@@ -1329,18 +1486,19 @@ function viewAnalyze(sym){
    +'<div><h2 style="margin-top:0"><span class="ic">🎯</span>'+t('az_ta')+'</h2><div class="tvw" style="margin-top:0" id="azTa"></div></div>'
    +'<div><h2 style="margin-top:0"><span class="ic">🏢</span>'+t('az_prof')+'</h2><div class="tvw" style="margin-top:0" id="azProf"></div></div>'
    +'</div>'
-   +'<h2><span class="ic">📊</span>'+t('az_fin')+'</h2><div class="tvw" style="margin-top:0" id="azFin"></div>'
+   +'<div id="azFinSec"><h2><span class="ic">📊</span>'+t('az_fin')+'</h2><div class="tvw" style="margin-top:0" id="azFin"></div></div>'
    +'<h2><span class="ic">📰</span>'+t('az_news')+'</h2><div class="tvw" style="margin-top:0" id="azNews"></div>'
    +searchBox()
    +'<div class="disc"><b>⚠️</b> '+t('tv_cap')+' '+t('disc_short')+'</div></div>';
 }
 function mountAnalyze(sym){
-  tvMount('azInfo','symbol-info',{symbol:sym,width:'100%',locale:tvLocale(),colorTheme:THEME,isTransparent:true});
-  tvChart('azChart',sym,560);
-  tvGauge('azTa',sym,430);
-  tvMount('azProf','symbol-profile',{symbol:sym,width:'100%',height:430,locale:tvLocale(),colorTheme:THEME,isTransparent:true});
-  tvMount('azFin','financials',{symbol:sym,width:'100%',height:460,locale:tvLocale(),colorTheme:THEME,isTransparent:true,displayMode:'regular'});
-  tvMount('azNews','timeline',{feedMode:'symbol',symbol:sym,width:'100%',height:450,locale:tvLocale(),colorTheme:THEME,isTransparent:true,displayMode:'regular'});
+  var tv=tvSym(sym); /* TradingView 要自己嗰套代號格式 */
+  tvMount('azInfo','symbol-info',{symbol:tv,width:'100%',locale:tvLocale(),colorTheme:THEME,isTransparent:true});
+  tvChart('azChart',tv,560);
+  tvGauge('azTa',tv,430);
+  arwProfile(sym,'azProf'); /* Yahoo 簡介，取代成日冇料嘅 TradingView symbol-profile */
+  tvMount('azFin','financials',{symbol:tv,width:'100%',height:460,locale:tvLocale(),colorTheme:THEME,isTransparent:true,displayMode:'regular'});
+  arwNews(sym,'azNews'); /* Yahoo 個股新聞，覆蓋廣過 TradingView，冇料自動退回大市新聞 */
   bindSearch();
 }
 
@@ -1349,8 +1507,8 @@ var SYS_SYM='NASDAQ:NVDA';
 window.__sys=function(s){ SYS_SYM=s; render(); };
 window.__sysAsk=function(){
   var el=document.getElementById('sysNew'); if(!el) return;
-  var v=el.value.trim().toUpperCase().replace(/[^A-Z0-9:.\-_]/g,'');
-  if(v){ SYS_SYM=v; render(); } else el.focus();
+  var v=el.value.trim().toUpperCase().replace(/[^A-Z0-9:.\-_=^]/g,'');
+  if(v){ SYS_SYM=tvSym(v); render(); } else el.focus(); /* 打 0700.HK 都用得 */
 };
 function viewSystem(){
   var btns=REPORTS.map(function(r){
