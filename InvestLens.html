@@ -26,7 +26,31 @@
   --red:#f2716d;
   --radius:14px;
   --maxw:1080px;
+  --headbg:rgba(10,17,32,.82);
+  --tapebg:rgba(13,22,40,.7);
 }
+/* 淺色模式：同一套變數換晒值（撳 header 個 ☀️/🌙 掣切換） */
+:root[data-theme="light"]{
+  --bg:#f3f5f9;
+  --bg2:#ecf0f6;
+  --panel:#ffffff;
+  --panel2:#f7f3e9;
+  --line:#dbe2ee;
+  --text:#1d2738;
+  --muted:#4e5d76;
+  --faint:#7e8ba1;
+  --gold:#a87d20;
+  --gold2:#7c5a12;
+  --green:#118a54;
+  --teal:#0d8b7a;
+  --blue:#2270cf;
+  --amber:#9a7207;
+  --red:#c8433e;
+  --headbg:rgba(246,248,251,.85);
+  --tapebg:rgba(255,255,255,.75);
+}
+:root[data-theme="light"] nav a:hover{background:rgba(0,0,0,.05)}
+:root[data-theme="light"] nav a.active{background:rgba(168,125,32,.12)}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
 body{
@@ -45,7 +69,7 @@ a:hover{text-decoration:underline}
 /* ---------- header ---------- */
 header{
   position:sticky;top:0;z-index:50;
-  background:rgba(10,17,32,.82);
+  background:var(--headbg);
   backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   border-bottom:1px solid var(--line);
 }
@@ -241,7 +265,8 @@ footer{border-top:1px solid var(--line);margin-top:20px}
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13.5px;color:var(--gold2);overflow-x:auto;white-space:nowrap;
 }
 /* ---------- live widgets / search ---------- */
-#tape{border-bottom:1px solid var(--line);background:rgba(13,22,40,.7);min-height:46px}
+#tape{border-bottom:1px solid var(--line);background:var(--tapebg);min-height:46px}
+.lico{width:1em;height:1em;display:inline-block;vertical-align:-0.12em}
 .tvw{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--panel);margin-top:14px}
 .searchbar{display:flex;gap:10px;flex-wrap:wrap}
 .searchbar input{
@@ -271,6 +296,7 @@ details.rules h1{font-size:21px;margin-top:6px}
       <div><b>InvestLens</b><small id="brandSub">智投透視 · 投資分析與策略</small></div>
     </div>
     <nav id="nav"></nav>
+    <button class="langbtn" id="themeBtn" title="深色／淺色模式 Dark/Light mode">☀️</button>
     <button class="langbtn" id="langBtn" title="切換語言 / Switch language">EN</button>
   </div>
 </header>
@@ -301,6 +327,15 @@ details.rules h1{font-size:21px;margin-top:6px}
 
 var LS_LANG='il_lang';
 var L=localStorage.getItem(LS_LANG)||'zh';
+/* 深色／淺色模式：預設深色，揀咗會記住 */
+var LS_THEME='il_theme';
+var THEME=localStorage.getItem(LS_THEME)||'dark';
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme',THEME);
+  var b=document.getElementById('themeBtn');
+  if(b) b.textContent=(THEME==='dark'?'☀️':'🌙'); /* 顯示「撳咗會變成」嗰個模式 */
+}
+applyTheme();
 
 function T(o){ if(o==null) return ''; if(typeof o==='string') return o; return (o[L]!==undefined?o[L]:o.zh)||''; }
 
@@ -726,8 +761,8 @@ en:'<h1>🌐 Macro Dashboard</h1><p class="sub">Macro decides <i>which asset cla
 },
 
 disc:{
-zh:'<h1>⚠️ 免責聲明</h1><div class="panel" style="margin-top:18px"><p><b>本網站所有內容僅供教育及一般資訊用途，不構成任何證券、基金、商品或其他金融產品之要約、招攬、投資建議或推薦。</b></p><p>內容基於編寫時公開可得嘅資料，價位、指標及水平均屬<b>示例性質</b>，可能已經過時或不準確，亦不保證完整。所有「買入／賣出信號」、「止蝕位」、「止賺位」、「目標價」同「情境估值」都係分析框架嘅示範，<b>唔係對任何人嘅個別建議</b>。</p><p>投資涉及風險，證券價格可升可跌，甚至變成毫無價值；過往表現唔代表將來表現。閣下應該根據自身財務狀況、投資目標同風險承受能力作出獨立判斷，並喺需要時諮詢持牌財務顧問、券商或其他專業人士。</p><p>本網站編者可能持有或買賣文中提及嘅資產。使用本網站任何資訊所引致嘅任何損失，編者概不負責。</p></div>',
-en:'<h1>⚠️ Disclaimer</h1><div class="panel" style="margin-top:18px"><p><b>All content on this website is for education and general information only. Nothing here constitutes an offer, solicitation, investment advice or recommendation regarding any security, fund, commodity or other financial product.</b></p><p>Content is based on publicly available information at the time of writing. Prices, indicators and levels are <b>illustrative</b>, may be outdated or inaccurate, and completeness is not guaranteed. All “buy/sell signals,” “stop-loss levels,” “profit targets” and “scenario valuations” are demonstrations of an analytical framework — <b>not personal recommendations to anyone</b>.</p><p>Investing involves risk. Prices can fall as well as rise, and holdings can become worthless. Past performance is not indicative of future results. Make independent decisions based on your own financial situation, objectives and risk tolerance, and consult a licensed financial adviser, broker or other professional where appropriate.</p><p>The author may hold or trade assets mentioned. The author accepts no liability for any loss arising from the use of any information on this site.</p></div>'
+zh:'<h1>{ICO:shield} 免責聲明</h1><div class="panel" style="margin-top:18px"><p><b>本網站所有內容僅供教育及一般資訊用途，不構成任何證券、基金、商品或其他金融產品之要約、招攬、投資建議或推薦。</b></p><p>內容基於編寫時公開可得嘅資料，價位、指標及水平均屬<b>示例性質</b>，可能已經過時或不準確，亦不保證完整。所有「買入／賣出信號」、「止蝕位」、「止賺位」、「目標價」同「情境估值」都係分析框架嘅示範，<b>唔係對任何人嘅個別建議</b>。</p><p>投資涉及風險，證券價格可升可跌，甚至變成毫無價值；過往表現唔代表將來表現。閣下應該根據自身財務狀況、投資目標同風險承受能力作出獨立判斷，並喺需要時諮詢持牌財務顧問、券商或其他專業人士。</p><p>本網站編者可能持有或買賣文中提及嘅資產。使用本網站任何資訊所引致嘅任何損失，編者概不負責。</p></div>',
+en:'<h1>{ICO:shield} Disclaimer</h1><div class="panel" style="margin-top:18px"><p><b>All content on this website is for education and general information only. Nothing here constitutes an offer, solicitation, investment advice or recommendation regarding any security, fund, commodity or other financial product.</b></p><p>Content is based on publicly available information at the time of writing. Prices, indicators and levels are <b>illustrative</b>, may be outdated or inaccurate, and completeness is not guaranteed. All “buy/sell signals,” “stop-loss levels,” “profit targets” and “scenario valuations” are demonstrations of an analytical framework — <b>not personal recommendations to anyone</b>.</p><p>Investing involves risk. Prices can fall as well as rise, and holdings can become worthless. Past performance is not indicative of future results. Make independent decisions based on your own financial situation, objectives and risk tolerance, and consult a licensed financial adviser, broker or other professional where appropriate.</p><p>The author may hold or trade assets mentioned. The author accepts no liability for any loss arising from the use of any information on this site.</p></div>'
 }
 };
 
@@ -832,7 +867,7 @@ function viewReport(id){
   var tags=r.tags.map(function(g){return '<span class="chip gold">'+T(g)+'</span>'}).join('');
   var loc=L==='zh'?'zh_TW':'en';
   var tv='<div class="tvbox"><iframe loading="lazy" src="https://s.tradingview.com/widgetembed/?symbol='+encodeURIComponent(r.tv)
-    +'&interval=D&hidesidetoolbar=1&symboledit=0&saveimage=0&theme=dark&style=1&timezone=Asia%2FHong_Kong&hideideas=1&locale='+loc+'"></iframe>'
+    +'&interval=D&hidesidetoolbar=1&symboledit=0&saveimage=0&theme='+THEME+'&style=1&timezone=Asia%2FHong_Kong&hideideas=1&locale='+loc+'"></iframe>'
     +'<div class="cap">'+t('tv_cap')+'</div></div>';
   var secs=r.sections.map(function(s){
     return '<div class="sec'+(s.cls?' '+s.cls:'')+'"><h3><span>'+s.ic+'</span>'+T(s.title)+'</h3>'+T(s.body)+'</div>';
@@ -965,7 +1000,7 @@ function tvChart(id,sym,h){
     if(!document.getElementById(id+'_c')) return; /* 已轉咗頁 */
     new TradingView.widget({
       container_id:id+'_c', width:'100%', height:h||600, symbol:sym, interval:'D',
-      timezone:'Asia/Hong_Kong', theme:'dark', style:'1', locale:tvLocale(),
+      timezone:'Asia/Hong_Kong', theme:THEME, style:'1', locale:tvLocale(),
       withdateranges:true, hide_side_toolbar:false, allow_symbol_change:true,
       studies:TV_STUDIES, studies_overrides:TV_OVR
     });
@@ -973,7 +1008,7 @@ function tvChart(id,sym,h){
 }
 function tvGauge(id,sym,h){
   tvMount(id,'technical-analysis',{symbol:sym,width:'100%',height:h||440,locale:tvLocale(),
-    colorTheme:'dark',isTransparent:true,showIntervalTabs:true,displayMode:'single',interval:'1D'});
+    colorTheme:THEME,isTransparent:true,showIntervalTabs:true,displayMode:'single',interval:'1D'});
 }
 function mountTape(){
   tvMount('tape','ticker-tape',{symbols:[
@@ -985,7 +1020,7 @@ function mountTape(){
     {proName:'TVC:GOLD',title:L==='zh'?'黃金':'Gold'},
     {proName:'TVC:USOIL',title:L==='zh'?'美油':'WTI'},
     {proName:'HSI:HSI',title:L==='zh'?'恒指':'HSI'}
-  ],showSymbolLogo:true,isTransparent:true,displayMode:'adaptive',colorTheme:'dark',locale:tvLocale()});
+  ],showSymbolLogo:true,isTransparent:true,displayMode:'adaptive',colorTheme:THEME,locale:tvLocale()});
 }
 
 /* ---------------- 箭嘴買賣信號（自家引擎） ----------------
@@ -1221,11 +1256,12 @@ function mountArrow(){
       var box=document.getElementById('arwChart'); if(!box||ARW_SYM!==sym||ARW_MODE!==mode) return;
       box.innerHTML='';
       if(_arwChart){ try{ _arwChart.remove(); }catch(e){} _arwChart=null; }
+      var dk=(THEME!=='light');
       var ch=LightweightCharts.createChart(box,{height:430,autoSize:true,
-        layout:{background:{color:'transparent'},textColor:'#8fa3c0',fontSize:11},
-        grid:{vertLines:{color:'rgba(140,160,200,.07)'},horzLines:{color:'rgba(140,160,200,.07)'}},
-        rightPriceScale:{borderColor:'rgba(140,160,200,.2)'},
-        timeScale:{borderColor:'rgba(140,160,200,.2)',timeVisible:mode==='H',secondsVisible:false}});
+        layout:{background:{color:'transparent'},textColor:dk?'#8fa3c0':'#4a5872',fontSize:11},
+        grid:{vertLines:{color:dk?'rgba(140,160,200,.07)':'rgba(60,80,120,.12)'},horzLines:{color:dk?'rgba(140,160,200,.07)':'rgba(60,80,120,.12)'}},
+        rightPriceScale:{borderColor:dk?'rgba(140,160,200,.2)':'rgba(60,80,120,.3)'},
+        timeScale:{borderColor:dk?'rgba(140,160,200,.2)':'rgba(60,80,120,.3)',timeVisible:mode==='H',secondsVisible:false}});
       _arwChart=ch;
       function mk(color,w){ return ch.addLineSeries({color:color,lineWidth:w,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false}); }
       _arwRefs={cs:ch.addCandlestickSeries({upColor:'#22c55e',downColor:'#ef4444',wickUpColor:'#22c55e',wickDownColor:'#ef4444',borderVisible:false}),
@@ -1299,12 +1335,12 @@ function viewAnalyze(sym){
    +'<div class="disc"><b>⚠️</b> '+t('tv_cap')+' '+t('disc_short')+'</div></div>';
 }
 function mountAnalyze(sym){
-  tvMount('azInfo','symbol-info',{symbol:sym,width:'100%',locale:tvLocale(),colorTheme:'dark',isTransparent:true});
+  tvMount('azInfo','symbol-info',{symbol:sym,width:'100%',locale:tvLocale(),colorTheme:THEME,isTransparent:true});
   tvChart('azChart',sym,560);
   tvGauge('azTa',sym,430);
-  tvMount('azProf','symbol-profile',{symbol:sym,width:'100%',height:430,locale:tvLocale(),colorTheme:'dark',isTransparent:true});
-  tvMount('azFin','financials',{symbol:sym,width:'100%',height:460,locale:tvLocale(),colorTheme:'dark',isTransparent:true,displayMode:'regular'});
-  tvMount('azNews','timeline',{feedMode:'symbol',symbol:sym,width:'100%',height:450,locale:tvLocale(),colorTheme:'dark',isTransparent:true,displayMode:'regular'});
+  tvMount('azProf','symbol-profile',{symbol:sym,width:'100%',height:430,locale:tvLocale(),colorTheme:THEME,isTransparent:true});
+  tvMount('azFin','financials',{symbol:sym,width:'100%',height:460,locale:tvLocale(),colorTheme:THEME,isTransparent:true,displayMode:'regular'});
+  tvMount('azNews','timeline',{feedMode:'symbol',symbol:sym,width:'100%',height:450,locale:tvLocale(),colorTheme:THEME,isTransparent:true,displayMode:'regular'});
   bindSearch();
 }
 
@@ -1370,8 +1406,8 @@ function viewMacro(){
    +'<div class="disc"><b>⚠️</b> '+t('disc_short')+'</div></div>';
 }
 function mountMacro(){
-  tvMount('mcCal','events',{colorTheme:'dark',isTransparent:true,width:'100%',height:500,locale:tvLocale(),importanceFilter:'0,1',countryFilter:'us,cn,hk,eu,jp,gb'});
-  tvMount('mcNews','timeline',{feedMode:'market',market:'stock',isTransparent:true,displayMode:'regular',width:'100%',height:550,colorTheme:'dark',locale:tvLocale()});
+  tvMount('mcCal','events',{colorTheme:THEME,isTransparent:true,width:'100%',height:500,locale:tvLocale(),importanceFilter:'0,1',countryFilter:'us,cn,hk,eu,jp,gb'});
+  tvMount('mcNews','timeline',{feedMode:'market',market:'stock',isTransparent:true,displayMode:'regular',width:'100%',height:550,colorTheme:THEME,locale:tvLocale()});
 }
 
 /* ---------------- live markets page ---------------- */
@@ -1384,14 +1420,14 @@ function viewLive(){
    +'<div class="disc"><b>⚠️</b> '+t('tv_cap')+' '+t('disc_short')+'</div></div>';
 }
 function mountLive(){
-  tvMount('lvQuotes','market-quotes',{width:'100%',height:340,showSymbolLogo:true,isTransparent:true,colorTheme:'dark',locale:tvLocale(),
+  tvMount('lvQuotes','market-quotes',{width:'100%',height:340,showSymbolLogo:true,isTransparent:true,colorTheme:THEME,locale:tvLocale(),
     symbolsGroups:[{name:t('live_quotes'),symbols:[
       {name:'NASDAQ:USAR',displayName:'USA Rare Earth'},
       {name:'NASDAQ:NVDA',displayName:'NVIDIA'},
       {name:'NASDAQ:QQQ',displayName:'Invesco QQQ'},
       {name:'TVC:GOLD',displayName:L==='zh'?'黃金現貨':'Gold Spot'}
     ]}]});
-  tvMount('lvOverview','market-overview',{colorTheme:'dark',dateRange:'3M',showChart:true,locale:tvLocale(),isTransparent:true,width:'100%',height:450,
+  tvMount('lvOverview','market-overview',{colorTheme:THEME,dateRange:'3M',showChart:true,locale:tvLocale(),isTransparent:true,width:'100%',height:450,
     tabs:[
       {title:L==='zh'?'指數':'Indices',symbols:[
         {s:'FOREXCOM:SPXUSD',d:L==='zh'?'標普500':'S&P 500'},
@@ -1410,7 +1446,7 @@ function mountLive(){
         {s:'FX_IDC:USDHKD',d:L==='zh'?'美元／港元':'USD/HKD'},
         {s:'FX:USDJPY',d:L==='zh'?'美元／日圓':'USD/JPY'}]}
     ]});
-  tvMount('lvNews','timeline',{feedMode:'market',market:'stock',isTransparent:true,displayMode:'regular',width:'100%',height:500,colorTheme:'dark',locale:tvLocale()});
+  tvMount('lvNews','timeline',{feedMode:'market',market:'stock',isTransparent:true,displayMode:'regular',width:'100%',height:500,colorTheme:THEME,locale:tvLocale()});
   bindSearch();
 }
 
@@ -1440,11 +1476,25 @@ function postRender(hash){
   else if(hash.indexOf('#/report/')===0){
     var id=hash.slice(9),r=null,i;
     for(i=0;i<REPORTS.length;i++) if(REPORTS[i].id===id) r=REPORTS[i];
-    if(r) tvMount('repInfo','symbol-info',{symbol:r.tv,width:'100%',locale:tvLocale(),colorTheme:'dark',isTransparent:true});
+    if(r) tvMount('repInfo','symbol-info',{symbol:r.tv,width:'100%',locale:tvLocale(),colorTheme:THEME,isTransparent:true});
   }
   else bindSearch(); /* home / reports 頁有搜尋欄 */
 }
 
+/* ---------------- 六件套線條 icon（用 currentColor，深淺色主題都自動啱色；綠色點綴） ---------------- */
+var ICO={
+  report:'<svg class="lico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="5" width="30" height="38" rx="4"/><line x1="16" y1="14" x2="32" y2="14"/><line x1="16" y1="21" x2="32" y2="21"/><line x1="16" y1="28" x2="25" y2="28"/><polyline points="16,36 20,32 24,35 31,28" stroke="#2f9e6e"/></svg>',
+  kline:'<svg class="lico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><line x1="14" y1="10" x2="14" y2="38"/><rect x="10" y="16" width="8" height="14" rx="2"/><line x1="27" y1="6" x2="27" y2="34"/><rect x="23" y="12" width="8" height="14" rx="2"/><polyline points="8,40 20,30 28,34 42,20" stroke="#2f9e6e" stroke-linejoin="round"/></svg>',
+  target:'<svg class="lico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="24" cy="24" r="17"/><circle cx="24" cy="24" r="8"/><line x1="24" y1="3" x2="24" y2="11"/><line x1="24" y1="37" x2="24" y2="45"/><line x1="3" y1="24" x2="11" y2="24"/><line x1="37" y1="24" x2="45" y2="24"/><circle cx="24" cy="24" r="2.6" fill="#2f9e6e" stroke="none"/></svg>',
+  globe:'<svg class="lico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><circle cx="24" cy="24" r="18"/><ellipse cx="24" cy="24" rx="8.5" ry="18"/><line x1="6" y1="24" x2="42" y2="24"/><path d="M9 14.5 C14 18 34 18 39 14.5" stroke="#2f9e6e"/><path d="M9 33.5 C14 30 34 30 39 33.5" stroke="#2f9e6e"/></svg>',
+  calc:'<svg class="lico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><rect x="10" y="5" width="28" height="38" rx="5"/><rect x="15" y="10" width="18" height="8" rx="2"/><line x1="17" y1="25" x2="17" y2="25.1"/><line x1="24" y1="25" x2="24" y2="25.1"/><line x1="31" y1="25" x2="31" y2="25.1"/><line x1="17" y1="32" x2="17" y2="32.1"/><line x1="24" y1="32" x2="24" y2="32.1"/><line x1="31" y1="32" x2="31" y2="38" stroke="#2f9e6e"/></svg>',
+  shield:'<svg class="lico" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M24 4 L40 10 V22 C40 33 33 40.5 24 44 C15 40.5 8 33 8 22 V10 Z"/><polyline points="16,24 22,30 32,18" stroke="#2f9e6e"/></svg>'
+};
+/* 將成頁 HTML 入面嘅分區 emoji 換做統一線條 icon */
+function icoize(h){
+  return h.replace(/📊/g,ICO.report).replace(/📡/g,ICO.kline).replace(/📐/g,ICO.target)
+          .replace(/🌐/g,ICO.globe).replace(/🧮/g,ICO.calc).replace(/\{ICO:shield\}/g,ICO.shield);
+}
 function render(){
   var hash=location.hash||'#/home';
   var app=$('#app'), html;
@@ -1457,7 +1507,7 @@ function render(){
   else if(hash==='#/tools') html=viewTools();
   else if(hash==='#/disc') html=viewStatic('disc');
   else html=viewHome();
-  app.innerHTML=html;
+  app.innerHTML=icoize(html);
   renderChrome();
   postRender(hash);
   window.scrollTo(0,0);
@@ -1468,6 +1518,13 @@ $('#langBtn').addEventListener('click',function(){
   localStorage.setItem(LS_LANG,L);
   render();
   mountTape(); /* 語言變咗要重載報價帶 */
+});
+$('#themeBtn').addEventListener('click',function(){
+  THEME=(THEME==='dark'?'light':'dark');
+  localStorage.setItem(LS_THEME,THEME);
+  applyTheme();
+  render();
+  mountTape(); /* 主題變咗，TradingView widgets 要用新色重載 */
 });
 window.addEventListener('hashchange',render);
 render();
